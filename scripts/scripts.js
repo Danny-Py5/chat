@@ -18,7 +18,7 @@ loadChats();
 activateActionsOnPreviousMessages();
 
 // hovered messages
-export const hoveredEventWeakMap = new WeakMap();
+// export const hoveredEventWeakMap = new WeakMap();
 
 document.querySelectorAll(".message-container").forEach((messageCont) => {
     listenWhenHovered(messageCont);
@@ -165,7 +165,7 @@ export function listenWhenHovered(messageCont) {
     };
 
     messageCont.addEventListener("mouseover", moveHandler);
-    hoveredEventWeakMap.set(messageCont, moveHandler);
+    // hoveredEventWeakMap.set(messageCont, moveHandler);
 }
 
 let timeOut = undefined;

@@ -1,5 +1,5 @@
 import { chats } from "../data/chats.js";
-import { hoveredEventWeakMap, listenWhenHovered } from "./scripts.js";
+import {} from "./scripts.js";
 
 const chatHeadOptionsElem = document.querySelector(".options");
 const chatHeadBackButon = document.querySelector(".back-options");
@@ -64,7 +64,7 @@ function selectManyHandler(button) {
         document.querySelectorAll(".message-container");
 
     document.querySelectorAll(".message-container").forEach((messageCont) => {
-        removeHoveredEvent(messageCont);
+        hideThreeDotsButtons();
 
         const handler = () => {
             const selectedMessageElement = document.querySelector(
@@ -89,12 +89,9 @@ function cancleSelection() {
             const handler = selectManyWeakMap.get(messageCont);
             messageCont.removeEventListener("click", handler);
             selectManyWeakMap.delete(handler);
-
-            // add back the hover event listener
-            allMessageContainers.forEach((messageCont) => {
-                listenWhenHovered(messageCont);
-            });
         });
+
+        unhideThreeDotsButtons();
     }
 }
 function showChatHeadOptions() {
@@ -113,13 +110,15 @@ function clearFirstSelectedThreeDotsButtons(id) {
     threeDotButton.classList.remove("expanded");
 }
 
-function removeHoveredEvent(messageCont) {
-    const handler = hoveredEventWeakMap.get(messageCont);
-    // console.log(handler);
-    if (handler) {
-        messageCont.removeEventListener("mouseover", handler);
-        hoveredEventWeakMap.delete(messageCont);
-    }
+function hideThreeDotsButtons() {
+    document.querySelectorAll(".three-dots-button").forEach((button) => {
+        button.classList.add("hide");
+    });
+}
+function unhideThreeDotsButtons() {
+    document.querySelectorAll(".three-dots-button").forEach((button) => {
+        button.classList.remove("hide");
+    });
 }
 
 function addSelected(message) {

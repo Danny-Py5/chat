@@ -269,6 +269,9 @@ pre {
 .three-dots-button.show {
     display: block;
 }
+.three-dots-button.hide {
+    display: none;
+}
 .three-dots-button.show.expanded .dots-icon-cont {
     display: none;
 }
