@@ -45,9 +45,11 @@ class Chats {
     }
     #getMessageBody(
         message,
+        id,
         { isReceived = false, isSent = false, isNewMessage = false } = {}
     ) {
         const messsageBodyPreElem = _createElement("pre");
+        messsageBodyPreElem.setAttribute("data-id", message.id || id);
         if (isReceived) {
             messsageBodyPreElem.textContent = message.receive;
         } else if (isSent) {
@@ -60,6 +62,7 @@ class Chats {
 
     #setDate(messageElement, messageData) {
         const dateElement = _createElement("div");
+        dateElement.setAttribute("data-id", messageData.id);
 
         dateElement.classList.add("date");
         dateElement.innerHTML = formatDate(messageData.timeStramp);
@@ -84,7 +87,9 @@ class Chats {
 
         prevMessageElem
             .querySelector(".message")
-            .appendChild(this.#getMessageBody(message, { isSent: true }));
+            .appendChild(
+                this.#getMessageBody(message, message.id, { isSent: true })
+            );
         this.#setDate(prevMessageElem, message);
 
         return prevMessageElem;
@@ -107,30 +112,37 @@ class Chats {
         </div>`;
         prevMessageElem
             .querySelector(".message")
-            .appendChild(this.#getMessageBody(message, { isReceived: true }));
+            .appendChild(
+                this.#getMessageBody(message, message.id, { isReceived: true })
+            );
         this.#setDate(prevMessageElem, message);
 
         return prevMessageElem;
     }
     #getThreeDotsContainerContent(id) {
         return `
-            <div class="dots-icon-cont">
-                <div></div> <div></div><div></div>
+            <div data-id=${id} class="dots-icon-cont">
+                <div data-id=${id}></div> 
+                <div data-id=${id}></div>
+                <div data-id=${id}></div>
             </div>
-            <ul>
-                <li>
+            <ul data-id=${id}>
+                <li data-id=${id}>
                     <button class="delete delete-${id}" data-id="${id}">Delete</button>
                 </li>
-                <li>
+                <li data-id=${id}>
+                    <button class="edit edit-${id}" data-id="${id}">Edit</button>
+                </li>
+                <li data-id=${id}>
                     <button class="star star-${id}" data-id="${id}">Star</button>
                 </li>
-                <li>
+                <li data-id=${id}>
                     <button class="like like-${id}" data-id="${id}">Like</button>
                 </li>
-                <li>
+                <li data-id=${id}>
                     <button class="dislike dislike-${id}" data-id="${id}">Dislike</button>
                 </li>
-                <li>
+                <li data-id=${id}>
                     <button class="select-many select-many-${id}" data-id="${id}">Select Many</button>
                 </li>
             </ul>
@@ -173,6 +185,7 @@ class Chats {
             "data-message-container-id",
             id || newMessageId
         );
+        newSendingMessageElem.setAttribute("data-id", id || newMessageId);
         newSendingMessageElem.classList.add(
             `message-container`,
             `message-container-${id || newMessageId}`,
@@ -222,11 +235,11 @@ class Chats {
             this.addMessage(newMessageData);
         }
 
-        newSendingMessageElem
-            .querySelector(".message")
-            .appendChild(
-                this.#getMessageBody(typedMessage, { isNewMessage: true })
-            );
+        newSendingMessageElem.querySelector(".message").appendChild(
+            this.#getMessageBody(typedMessage, newMessageId, {
+                isNewMessage: true,
+            })
+        );
         this.#setDate(newSendingMessageElem, newMessageData);
 
         return newSendingMessageElem;

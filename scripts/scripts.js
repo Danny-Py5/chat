@@ -2,10 +2,7 @@
 if this file name must be changed, in the styles.css, the file name (script.js) must also be changed to the name this current file(scripts.js) is changed to inside the .three-dots-button.fade-out class.
 */
 import { chats } from "../data/chats.js";
-import {
-    activateActionsOnPreviousMessages,
-    activateActionsOnNewMessage,
-} from "./chat-options.js";
+import { activateActionsOnPreviousMessages } from "./chat-options.js";
 
 export const chatSection = document.querySelector(".chat-section");
 const cancelChat = document.querySelector(".cancel-chat");
@@ -20,20 +17,16 @@ activateActionsOnPreviousMessages();
 // hovered messages
 // export const hoveredEventWeakMap = new WeakMap();
 
+export let currentThreeDotButtonElem = undefined;
+
 document.querySelectorAll(".message-container").forEach((messageCont) => {
     listenWhenHovered(messageCont);
 });
 
-export let currentThreeDotButtonElem = undefined;
 const threeDotsButtonElements = document.querySelectorAll(".three-dots-button");
 
 threeDotsButtonElements.forEach((button) => {
     button.addEventListener("click", (event) => {
-        // [...threeDotsButtonElements].map((button) => {
-        //     if (button.classList.contains("expanded")) {
-        //         button.classList.remove("expanded");
-        //     }
-        // });
         showMessageActions(button, event);
         currentThreeDotButtonElem = button;
     });
@@ -99,7 +92,6 @@ function respond() {
     newMessageThreeDotsButtonClickEvent(
         refinedMessage.querySelector(".three-dots-button")
     );
-    activateActionsOnNewMessage(refinedMessage);
     document.querySelector(".chats").appendChild(refinedMessage);
 
     scrollDownChats();
@@ -139,8 +131,6 @@ function sendMessage() {
         newMessageThreeDotsButtonClickEvent(
             refinedMessage.querySelector(".three-dots-button")
         );
-        activateActionsOnNewMessage(refinedMessage);
-
         document.querySelector(".chats").appendChild(refinedMessage);
         userTypedMessgeElem.focus();
         scrollDownChats();
@@ -150,8 +140,8 @@ function sendMessage() {
     }
 }
 
-export function listenWhenHovered(messageCont) {
-    const moveHandler = () => {
+export function listenWhenHovered(messageCont, event) {
+    messageCont.addEventListener("mouseover", () => {
         if (!currentThreeDotButtonElem) {
             removeShownThreeDotsButtons();
             const { messageContainerId } = messageCont.dataset;
@@ -162,10 +152,7 @@ export function listenWhenHovered(messageCont) {
             hoveredMessageThreeDotsButton.classList.add("show");
             hideThreeDotsButtonOvertime(hoveredMessageThreeDotsButton);
         }
-    };
-
-    messageCont.addEventListener("mouseover", moveHandler);
-    // hoveredEventWeakMap.set(messageCont, moveHandler);
+    });
 }
 
 let timeOut = undefined;

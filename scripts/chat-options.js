@@ -4,8 +4,10 @@ import {} from "./scripts.js";
 const chatHeadOptionsElem = document.querySelector(".options");
 const chatHeadBackButon = document.querySelector(".back-options");
 const chatHeadDeleteButon = document.querySelector(".options_delete");
+const chatCont = document.querySelector(".chat-cont");
 
 const selectedMessagesId = [];
+const removedThreeDotsButtons = [];
 
 const back = () => {
     selectedMessagesId.forEach((id) => {
@@ -19,79 +21,63 @@ const back = () => {
 chatHeadBackButon.addEventListener("click", back);
 
 export function activateActionsOnPreviousMessages() {
-    const allDeleteButtons = document.querySelectorAll(".delete");
-    const allSelectManyButtons = document.querySelectorAll(".select-many");
-
-    allDeleteButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-            deleteHandler(button);
-        });
-    });
-    allSelectManyButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-            selectManyHandler(button);
-        });
-    });
-}
-export function activateActionsOnNewMessage(refinedMessage) {
-    const deleteButton = refinedMessage.querySelector(".delete");
-    const selectManyButton = refinedMessage.querySelector(".select-many");
-
-    deleteButton.addEventListener("click", function () {
-        deleteHandler(deleteButton);
-    });
-    selectManyButton.addEventListener("click", () => {
-        selectManyHandler(selectManyButton);
+    chatCont.addEventListener("click", (event) => {
+        if (event.target.innerText == "Delete") {
+            const { id } = event.target.dataset;
+            deleteHandler(id);
+        } else if (event.target.innerText == "Select Many") {
+            selectManyHandler(event.target.dataset.id);
+        }
     });
 }
 
-function deleteHandler(button) {
-    const { id } = button.dataset;
-    chats.deleteMessage(id);
-
-    const thisButtonMessageContainer = document.querySelector(
+function deleteHandler(id) {
+    const thisButtonMessageContainer = chatCont.querySelector(
         `.message-container-${id}`
     );
     thisButtonMessageContainer.remove();
 }
 
 const selectManyWeakMap = new WeakMap();
-function selectManyHandler(button) {
-    const { id } = button.dataset;
-    clearFirstSelectedThreeDotsButtons(id);
+function selectManyHandler(id) {
+    addSelected(chatCont.querySelector(`.message-container-${id}`));
+    const hoverHandler = (event) => {
+        const { id: targetedElementId } = event.target.dataset;
+        const targetedElement = chatCont.querySelector(
+            `.three-dots-button-${targetedElementId}`
+        );
+        if (targetedElement) {
+            hideThreeDotsButton(targetedElement);
+        }
+    };
+    chatCont.addEventListener("mouseover", hoverHandler);
 
-    const allMessageContainers =
-        document.querySelectorAll(".message-container");
+    const mouseUpHandler = (event) => {
+        const selectedMessage = chatCont.querySelector(
+            `.message-container-${event.target.dataset.id}`
+        );
+        if (selectedMessage) {
+            addSelected(selectedMessage);
+        }
+    };
+    chatCont.addEventListener("mouseup", mouseUpHandler);
 
-    document.querySelectorAll(".message-container").forEach((messageCont) => {
-        hideThreeDotsButtons();
-
-        const handler = () => {
-            const selectedMessageElement = document.querySelector(
-                `.message-container-${newlySelectedMsgId}`
-            );
-            addSelected(selectedMessageElement);
-        };
-        const { messageContainerId: newlySelectedMsgId } = messageCont.dataset;
-
-        messageCont.addEventListener("click", handler);
-        selectManyWeakMap.set(messageCont, handler);
-    });
+    // set in weakMap
+    selectManyWeakMap.set(chatCont, [hoverHandler, mouseUpHandler]);
     showChatHeadOptions();
 }
 function cancleSelection() {
     if (selectedMessagesId.length <= 0) {
         hideChatHeadOptions();
 
-        const allMessageContainers =
-            document.querySelectorAll(".message-container");
-        allMessageContainers.forEach((messageCont) => {
-            const handler = selectManyWeakMap.get(messageCont);
-            messageCont.removeEventListener("click", handler);
-            selectManyWeakMap.delete(handler);
-        });
-
-        unhideThreeDotsButtons();
+        const handler = selectManyWeakMap.get(chatCont);
+        // console.log(handler);
+        if (handler) {
+            chatCont.removeEventListener("mouseover", handler[0]);
+            chatCont.removeEventListener("mouseup", handler[1]);
+            selectManyWeakMap.delete(chatCont);
+        }
+        unhideThreeDotsButton();
     }
 }
 function showChatHeadOptions() {
@@ -103,22 +89,18 @@ function hideChatHeadOptions() {
     chatHeadOptionsElem.classList.add("hide");
 }
 
-function clearFirstSelectedThreeDotsButtons(id) {
-    console.log("asdfasd");
-    const threeDotButton = document.querySelector(`.three-dots-button-${id}`);
-    threeDotButton.classList.remove("show");
-    threeDotButton.classList.remove("expanded");
-}
-
-function hideThreeDotsButtons() {
-    document.querySelectorAll(".three-dots-button").forEach((button) => {
+function hideThreeDotsButton(button) {
+    if (!button.classList.contains("hide")) {
         button.classList.add("hide");
-    });
+        removedThreeDotsButtons.push(button);
+    }
 }
-function unhideThreeDotsButtons() {
-    document.querySelectorAll(".three-dots-button").forEach((button) => {
+function unhideThreeDotsButton() {
+    removedThreeDotsButtons.forEach((button) => {
         button.classList.remove("hide");
     });
+    removedThreeDotsButtons.splice(0);
+    // console.log(removedThreeDotsButtons)
 }
 
 function addSelected(message) {
@@ -134,5 +116,5 @@ function addSelected(message) {
         message.classList.remove("selected");
     }
     cancleSelection();
-    console.log(selectedMessagesId);
+    // console.log(selectedMessagesId);
 }
