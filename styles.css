@@ -15,6 +15,13 @@
     --chat-width-height-primary: 80px;
 
     --bg: #f2f2f2;
+
+    /* border */
+    --border-radius-primary: 8px;
+    --border-radius-secondary: 16px;
+
+    /* transistion */
+    --transition-duration: 0.3s;
 }
 body {
     /* padding: .3rem; */
@@ -23,6 +30,9 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     /* position: relative; */
     height: 100vh;
+}
+ul {
+    list-style-type: none;
 }
 button {
     cursor: pointer;
@@ -66,7 +76,7 @@ pre {
 
 .chat-section.open {
     overflow: unset;
-    border-radius: 1rem;
+    border-radius: var(--border-radius-secondary);
     animation: pupShow var(--chat-reveal-animation-sec) ease-out both;
 }
 .chat-section:not(.open)::before {
@@ -103,7 +113,7 @@ pre {
     from {
         width: 300px;
         height: 90vh;
-        border-radius: 1rem;
+        border-radius: var(--border-radius-secondary);
     }
     /* 90% {
         border-radius: 100%;
@@ -204,9 +214,16 @@ pre {
     position: absolute;
     top: 0;
     display: none;
+    transition: var(--transition-duration);
 }
 .three-dots-button.show {
     display: flex;
+}
+.three-dots-button.expanded {
+    width: fit-content;
+    height: auto;
+    border-radius: var(--border-radius-primary);
+    padding: var(--padding);
 }
 .three-dots-button div {
     border-radius: 100%;
@@ -245,7 +262,7 @@ pre {
 .received-message-body {
     color: white;
     padding: 0.5rem;
-    border-radius: 0.5rem;
+    border-radius: var(--border-radius-primary);
     box-shadow: 0 3px 5px rgba(144, 144, 144, 0.428);
 }
 
@@ -264,7 +281,7 @@ pre {
     /* padding: var(--padding); */
 }
 #message {
-    border-radius: 0.5rem;
+    border-radius: var(--border-radius-primary);
     background-color: #d7d7d780;
     border: none;
     font: inherit;
@@ -284,7 +301,7 @@ pre {
     transform: translateY(-50%);
 }
 .send {
-    border-radius: 0.5rem;
+    border-radius: var(--border-radius-primary);
     padding: 1rem 0.5rem;
     border: none;
     background-color: var(--primary-color);

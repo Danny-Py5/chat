@@ -37,14 +37,16 @@ class Chats {
     }
     #getPreviousRefinedSentMessage(message) {
         const { newSendingMessageElem: prevMessageElem } =
-            chats.#createMessageElement(message.containerClass, {
+            chats.#createMessageContainerElement(message.containerClass, {
                 id: message.id,
             });
         prevMessageElem.innerHTML = `
-        <button class="three-dots-button three-dots-button-${message.id}">
-            <div></div> <div></div><div></div>
+        <button class="three-dots-button three-dots-button-${message.id} ">
+            ${this.#getThreeDotsContainerContent()}
         </button>
-        <div class="message js-message ${message.messageClassName}" data-id="${message.id}">
+        <div class="message js-message ${message.messageClassName}" data-id="${
+            message.id
+        }">
             
         </div>`;
         const messsageBodyPreElem = _createElement("pre");
@@ -58,14 +60,16 @@ class Chats {
     }
     #getPreviousRefinedRecievedMessage(message) {
         const { newSendingMessageElem: prevMessageElem } =
-            chats.#createMessageElement(message.containerClass, {
+            chats.#createMessageContainerElement(message.containerClass, {
                 id: message.id,
             });
         prevMessageElem.innerHTML = `
-        <button class="three-dots-button three-dots-button-${message.id}">
-            <div></div> <div></div><div></div>
+        <button class="three-dots-button three-dots-button-${message.id} ">
+            ${this.#getThreeDotsContainerContent()}
         </button>
-        <div class="message js-message ${message.messageClassName}" data-id="${message.id}">
+        <div class="message js-message ${message.messageClassName}" data-id="${
+            message.id
+        }">
             
         </div>`;
         const messsageBodyPreElem = _createElement("pre");
@@ -76,6 +80,14 @@ class Chats {
             .appendChild(messsageBodyPreElem);
 
         return prevMessageElem;
+    }
+    #getThreeDotsContainerContent() {
+        return `
+            <div></div> <div></div><div></div>
+                <ul>
+                    <li>Delete</li>
+            </ul>
+        `;
     }
     getChats() {
         this.allChats.forEach((message) => {
@@ -100,12 +112,23 @@ class Chats {
         this.#saveToLocalStorage();
     }
 
-    #createMessageElement(uniqueContainerClassName, { id = undefined } = {}) {
+    #createMessageContainerElement(
+        uniqueContainerClassName,
+        { id = undefined } = {}
+    ) {
+        /* when this function is called without seting the id param, 
+        that means it is called in used for newly generating send or 
+        receive message container otherwise, it  is for generating
+        message contaniner element for previous messages */
         const newMessageId = getId();
         const newSendingMessageElem = _createElement("div");
+        newSendingMessageElem.setAttribute(
+            "data-message-container-id",
+            id || newMessageId
+        );
         newSendingMessageElem.classList.add(
             `message-container`,
-            `message-${id || newMessageId}`,
+            `message-container-${id || newMessageId}`,
             `${uniqueContainerClassName}`
             // "received-message-body"
             // `sent-message-container`
@@ -121,10 +144,10 @@ class Chats {
         } = {}
     ) {
         const { newSendingMessageElem, newMessageId } =
-            chats.#createMessageElement(uniqueContainerClassName);
+            chats.#createMessageContainerElement(uniqueContainerClassName);
         newSendingMessageElem.innerHTML = `
-        <button class="three-dots-button three-dots-button-${newMessageId}">
-        <div></div> <div></div><div></div>
+        <button class="three-dots-button three-dots-button-${newMessageId} ">
+            ${this.#getThreeDotsContainerContent()}
         </button>
         <div class="message js-message ${uniqueMessageClassName}" data-id="${newMessageId}">
             

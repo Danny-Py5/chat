@@ -1,5 +1,4 @@
 import { chats } from "./data/chats.js";
-import { getId } from "./utils/chat-util.js";
 
 const chatSection = document.querySelector(".chat-section");
 const cancelChat = document.querySelector(".cancel-chat");
@@ -9,16 +8,23 @@ const userTypedMessgeElem = document.getElementById("message");
 
 // get previous charts
 getPreviousChats();
-
 // hovered messages
-document.querySelectorAll(".js-message").forEach((msg) => {
-    msg.addEventListener("mouseover", () => {
-        const { id: messageId } = msg.dataset;
-        console.log(messageId);
-        const hoveredMessage = document.querySelector(
-            `.three-dots-button-${messageId}`
-        );
-        hoveredMessage.classList.add("show");
+document.querySelectorAll(".message-container").forEach((messageCont) => {
+    listenWhenHovered(messageCont);
+});
+
+let currentThreeDotButtonElem = undefined;
+const threeDotsButtonElements = document.querySelectorAll(".three-dots-button");
+
+threeDotsButtonElements.forEach((button) => {
+    button.addEventListener("click", (event) => {
+        [...threeDotsButtonElements].map((button) => {
+            if (button.classList.contains("expanded")) {
+                button.classList.remove("expanded");
+            }
+        });
+        showMessageActions(button, event);
+        currentThreeDotButtonElem = button;
     });
 });
 const randomResponses = [
@@ -31,6 +37,14 @@ const randomResponses = [
 chatSection.addEventListener("click", (event) => {
     chatSection.classList.add("open");
     chatSection.classList.remove("close");
+    // removeShownThreeDotsButtons();
+
+    if (currentThreeDotButtonElem) {
+        if (!currentThreeDotButtonElem.contains(event.target)) {
+            currentThreeDotButtonElem.classList.remove("expanded");
+            currentThreeDotButtonElem = undefined;
+        }
+    }
 });
 
 cancelChat.addEventListener("click", (event) => {
@@ -53,17 +67,6 @@ messageTexarea.addEventListener("keydown", function (event) {
     }
 });
 
-function listenOnHovered(message) {
-    message.addEventListener("mouseover", () => {
-        const { id: messageId } = msg.dataset;
-        console.log(messageId);
-        const hoveredMessage = document.querySelector(
-            `.three-dots-button-${messageId}`
-        );
-        hoveredMessage.classList.add("show");
-    });
-}
-
 function getPreviousChats() {
     chats.getChats();
     scrollDownChats();
@@ -76,6 +79,10 @@ function respond() {
     const refinedMessage = chats.getrefinedMessage(response, {
         uniqueContainerClassName: "received-message-container",
         uniqueMessageClassName: "received-message-body",
+    });
+
+    refinedMessage.addEventListener("mouseover", () => {
+        listenWhenHovered(refinedMessage);
     });
     // console.log(chats.allChats);
 
@@ -114,11 +121,11 @@ function sendMessage() {
             uniqueMessageClassName: "sent-message-body",
         });
 
-        // refinedMessage.addEventListener('mouseover', () => {
-        //     listenOnHovered
-        // })
+        refinedMessage.addEventListener("mouseover", () => {
+            listenWhenHovered(refinedMessage);
+        });
         document.querySelector(".chats").appendChild(refinedMessage);
-        console.log(refinedMessage);
+        //console.log(refinedMessage);
 
         userTypedMessgeElem.focus();
         scrollDownChats();
@@ -128,4 +135,33 @@ function sendMessage() {
         callRespond();
         messageTexarea.style.height = "auto";
     }
+}
+
+function listenWhenHovered(messageCont) {
+    messageCont.addEventListener("mouseover", () => {
+        // hide other msgs showing the three dots button
+        if (!currentThreeDotButtonElem) {
+            removeShownThreeDotsButtons();
+            const { messageContainerId } = messageCont.dataset;
+            const hoveredMessageThreeDotsButton = document.querySelector(
+                `.three-dots-button-${messageContainerId}`
+            );
+            hoveredMessageThreeDotsButton.classList.add("show");
+        }
+    });
+}
+
+function removeShownThreeDotsButtons() {
+    const allMessagesContainer =
+        document.querySelectorAll(".message-container");
+    [...allMessagesContainer].map((container) => {
+        const threeDotsElem = container.querySelector(".three-dots-button");
+        if (threeDotsElem.classList.contains("show")) {
+            threeDotsElem.classList.remove("show");
+        }
+    });
+}
+
+function showMessageActions(button, event) {
+    button.classList.add("expanded");
 }
