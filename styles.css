@@ -24,6 +24,9 @@ body {
     /* position: relative; */
     height: 100vh;
 }
+button {
+    cursor: pointer;
+}
 pre {
     font: inherit;
     word-wrap: break-word;
@@ -140,7 +143,6 @@ pre {
 }
 /* cancell-chat button */
 .cancel-chat {
-    cursor: pointer;
     width: 25px;
     height: 20px;
     position: relative;
@@ -180,22 +182,70 @@ pre {
     row-gap: 4px;
 }
 
-.sent-message-body {
-    background-color: var(--primary-color);
+/* style for both sent and recieved message  */
+.message-container {
+    /* border: 2px solid red; */
+    max-width: 80%;
+    position: relative;
+}
+.three-dots-button {
+    border: none;
+    box-shadow: 0 5px 10px rgba(144, 144, 144, 0.638);
+    background-color: #fff;
+    width: 30px;
+    border-radius: 100%;
+    height: 30px;
+    align-items: center;
+    padding: 3px 0;
+    /* display: flex; */
+    flex-direction: column;
+    row-gap: 2px;
+    position: absolute;
+    top: 0;
+    display: none;
+}
+.three-dots-button.show {
+    display: flex;
+}
+.three-dots-button div {
+    border-radius: 100%;
+    padding: 3px;
+    background-color: green;
+}
+.received-message-container .three-dots-button {
+    left: 0;
+    transform: translateY(-105%) scale(0.8);
+}
+.sent-message-container .three-dots-button {
+    right: 0;
+    transform: translateY(-105%) scale(0.8);
+}
+.message {
+    /* max-width: 100%; */
+    cursor: pointer;
+    width: 100%;
+    user-select: none;
+}
+.sent-message-container {
     align-self: flex-end;
 }
+.sent-message-body {
+    background-color: var(--primary-color);
+}
 
+.received-message-container {
+    align-self: flex-start;
+}
 .received-message-body {
     background-color: rgb(2, 49, 2);
-    align-self: flex-start;
 }
 
 .sent-message-body,
 .received-message-body {
-    max-width: 80%;
     color: white;
     padding: 0.5rem;
     border-radius: 0.5rem;
+    box-shadow: 0 3px 5px rgba(144, 144, 144, 0.428);
 }
 
 /* actions container */
@@ -257,6 +307,7 @@ pre {
         right: 20px;
     }
     .chat-head {
+        z-index: 100;
         top: 0;
         left: 0;
         right: 0;

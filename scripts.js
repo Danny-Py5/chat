@@ -1,4 +1,5 @@
 import { chats } from "./data/chats.js";
+import { getId } from "./utils/chat-util.js";
 
 const chatSection = document.querySelector(".chat-section");
 const cancelChat = document.querySelector(".cancel-chat");
@@ -8,6 +9,18 @@ const userTypedMessgeElem = document.getElementById("message");
 
 // get previous charts
 getPreviousChats();
+
+// hovered messages
+document.querySelectorAll(".js-message").forEach((msg) => {
+    msg.addEventListener("mouseover", () => {
+        const { id: messageId } = msg.dataset;
+        console.log(messageId);
+        const hoveredMessage = document.querySelector(
+            `.three-dots-button-${messageId}`
+        );
+        hoveredMessage.classList.add("show");
+    });
+});
 const randomResponses = [
     "Hello, how are you doing",
     "Am fine and you?",
@@ -55,10 +68,11 @@ function respond() {
 
     console.log(response);
 
-    chats.addChat({
+    chats.addMessage({
         receive: response,
         timeStramp: new Date().getDate(),
         isSent: false,
+        id: getId(),
     });
     console.log(chats.allChats);
 
@@ -91,20 +105,35 @@ function _createElement(type) {
 }
 
 function sendMessage() {
-    let newSentMassageElem = _createElement("div");
+    const newMessageId = getId();
+    let newSentMessageElement = _createElement("div");
+    newSentMessageElement.classList.add(
+        `message-container`,
+        `message-${newMessageId}`,
+        `sent-message-container`
+    );
+    // console.log(newSentMessageElement);
+
     let messsageBodyPreElem = document.createElement("pre");
+    const typedMessage = userTypedMessgeElem.value;
+    if (typedMessage.trim()) {
+        newSentMessageElement.innerHTML = `
+        <button class="three-dots-button three-dots-button-${newMessageId}">
+            <div></div> <div></div><div></div>
+        </button>
+        <div class="message  js-message sent-message-body" data-id="${newMessageId}">
+            <pre>
+                ${typedMessage}
+            </pre>
+        </div>`;
 
-    if (userTypedMessgeElem.value.trim()) {
-        messsageBodyPreElem.textContent = userTypedMessgeElem.value;
-        newSentMassageElem.appendChild(messsageBodyPreElem);
-        newSentMassageElem.classList.add("sent-message-body");
-
-        chats.addChat({
+        chats.addMessage({
             sent: userTypedMessgeElem.value,
             timeStramp: new Date().getDate(),
             isSent: true,
+            id: newMessageId,
         });
-        document.querySelector(".chats").appendChild(newSentMassageElem);
+        document.querySelector(".chats").appendChild(newSentMessageElement);
 
         userTypedMessgeElem.focus();
         scrollDownChats();
@@ -113,5 +142,6 @@ function sendMessage() {
 
         callRespond();
         messageTexarea.style.height = "auto";
+        getChats();
     }
 }

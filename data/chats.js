@@ -5,16 +5,19 @@ class Chats {
                 sent: "hello there",
                 timeStramp: new Date().getDate(),
                 isSent: true,
+                id: "023832-27922972",
             },
             {
                 sent: "hello there",
                 timeStramp: new Date().getDate(),
                 isSent: true,
+                id: "0823892-238732",
             },
             {
                 receive: "hello there",
                 timeStramp: new Date().getDate(),
                 isSent: false,
+                id: "0823891-238932",
             },
         ];
     }
@@ -26,22 +29,35 @@ class Chats {
 
     getChats() {
         let chatHTML = "";
-        this.allChats.forEach((chat) => {
-            if (chat.isSent) {
+        this.allChats.forEach((message) => {
+            if (message.isSent) {
                 chatHTML += `
-                    <div class="sent-message-body">${chat.sent}</div>
+                <div class="message-container message-${message.id} sent-message-container">
+                    <button class="three-dots-button three-dots-button-${message.id}">
+                        <div></div> <div></div><div></div>
+                    </button>
+                    <div class="message  js-message sent-message-body" data-id="${message.id}">
+                        ${message.sent}
+                    </div>
+                </div>
                 `;
             } else {
                 chatHTML += `
-                    <div class="received-message-body">${chat.receive}</div>
-                `;
+                <div class="message-container message-${message.id} received-message-container">
+                    <button class="three-dots-button three-dots-button-${message.id}">
+                        <div></div> <div></div><div></div>
+                    </button>
+                    <div class="message  js-message received-message-body" data-id="${message.id}">
+                        ${message.receive}
+                    </div>
+                </div>`;
             }
         });
         return chatHTML;
     }
 
-    addChat(chat) {
-        this.allChats.push(chat);
+    addMessage(message) {
+        this.allChats.push(message);
         this.#saveToLocalStorage();
     }
 }
