@@ -47,11 +47,3 @@ class Chats {
 }
 
 export const chats = new Chats();
-
-// for (let a = 0; a <= 5; ++a) {
-//     chats.addChat({
-//         sent: "hello there",
-//         timeStramp: new Date().getDate(),
-//         isSent: true,
-//     });
-// }

@@ -257,6 +257,9 @@ pre {
         right: 20px;
     }
     .chat-head {
+        top: 0;
+        left: 0;
+        right: 0;
         position: fixed;
         background-color: var(--bg);
     }
@@ -276,6 +279,9 @@ pre {
 
     .actions-cont {
         position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
         background-color: var(--bg);
     }
 }
