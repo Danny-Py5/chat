@@ -8,10 +8,10 @@
     --primary-color: rgb(0, 94, 0);
     --color: #555;
     --message-color: #eee;
-    --selected-message-bg: rgba(0, 94, 0, 0.363);
+    --selected-message-bg: rgba(3, 98, 3, 0.38);
     --three-dots-button-bg-color: #fff;
     --hovered-message-bg-color: rgba(0, 94, 0, 0.058);
-    --received-message-bg-color: rgb(0, 30, 0);
+    --received-message-bg-color: hsl(120, 100%, 6%);
     --padding: 0.5rem;
     --chat-reveal-animation-sec: 0.1s;
     --chat-width: 350px;
@@ -58,6 +58,13 @@ pre {
 .padding {
     padding: var(--padding);
 }
+/* utility */
+.center-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/* utility ends */
 .chat-cont,
 .chat-section {
 }
@@ -167,7 +174,8 @@ pre {
 .options.hide {
     display: none;
 }
-.options.show + .profile-cont {
+.options.show + .profile-cont,
+.chat-head.editing .profile-cont {
     display: none;
 }
 .profile-cont {
@@ -211,7 +219,7 @@ pre {
 /* cancell-chat button  done*/
 .chat-cont {
     /* background-color: antiquewhite; */
-    margin: 62px 0;
+    margin: 62px 0 0;
     flex: 1;
     width: 100%;
     gap: 8px;
@@ -224,6 +232,19 @@ pre {
     flex-direction: column;
     /* width: fit-content; */
     row-gap: 1.5px;
+}
+.chat-cont.editing .options {
+    display: flex;
+}
+/* .chat-cont.editing .message {
+    filter: blur(1px);
+} */
+.editing-container {
+    display: none;
+}
+
+.chat-cont.editing .three-dots-button {
+    display: none;
 }
 
 /* style for both sent and recieved message  */
@@ -312,6 +333,9 @@ pre {
     left: 0;
     transform: translateY(-105%) scale(0.8);
 }
+.received-message-container ul li button.edit {
+    display: none;
+}
 .sent-message-container .three-dots-button {
     right: 0;
     transform: translateY(-105%) scale(0.8);
@@ -323,18 +347,15 @@ pre {
     max-width: 80%;
     user-select: none;
 }
-
-.sent-message-container {
-    /* align-self: flex-end; */
+.chat-cont.editing .message-container:hover {
+    background-color: #00000000;
 }
+
 .sent-message-body {
     background-color: var(--primary-color);
     margin-left: auto;
 }
 
-.received-message-container {
-    /* align-self: flex-start; */
-}
 .received-message-body {
     background-color: var(--received-message-bg-color);
     margin-right: auto;
@@ -354,41 +375,70 @@ pre {
     /* background-color: #fff; */
 }
 
+/* edit message section  */
+.editing__message-cont {
+    padding: var(--padding);
+    background-color: var(--selected-message-bg);
+    display: none;
+    z-index: 2;
+}
+.chat-cont.editing ~ .editing__message-cont {
+    display: block;
+}
+
 /* actions container */
 .actions-cont {
-    /* background-color: green; */
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
     display: grid;
     grid-template-columns: 1fr 50px;
     gap: 8px;
-    /* margin-top: 100px; */
     height: fit-content;
-    /* padding: var(--padding); */
+}
+#message,
+.send {
+    border-radius: var(--border-radius-secondary);
 }
 #message {
-    border-radius: var(--border-radius-primary);
     background-color: #d7d7d780;
     border: none;
     font: inherit;
-    padding: 0.3rem;
-    color: grey;
-    transition: 0.5s;
+    padding: 5px;
+    color: rgb(99, 99, 99);
+    transition: 0.2s;
     resize: none;
+    line-height: 17px;
+    letter-spacing: 0.5px;
+    height: 30px;
 }
 #message:focus {
     outline: 2px solid var(--primary-color);
 }
 .send {
-    border-radius: var(--border-radius-primary);
     padding: 1rem 0.5rem;
     border: none;
     background-color: var(--primary-color);
-    color: white;
-    font: inherit;
     align-self: flex-end;
+}
+.send-icon {
+    position: relative;
+}
+.send-icon::before,
+.send-icon::after {
+    content: "";
+    height: 20px;
+    width: 5px;
+    background-color: #fff;
+    position: absolute;
+    top: 50%;
+    left: -50%;
+    transform: translate(-50%, -50%);
+    transform-origin: top;
+    border-radius: var(--border-radius-primary);
+}
+.send-icon::before {
+    rotate: 60deg;
+}
+.send-icon::after {
+    rotate: 206deg;
 }
 @media (min-width: 500px) {
     .message-container:hover {
