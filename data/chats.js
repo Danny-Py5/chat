@@ -13,6 +13,14 @@ class Chats {
                 messageClassName: "sent-message-body",
             },
             {
+                sent: "hello \nthere\nHappy new Sunday.\nWhish you good day ahead of you!",
+                timeStramp: new Date().getDate(),
+                isSent: true,
+                id: "023832-27902972",
+                containerClass: "sent-message-container",
+                messageClassName: "sent-message-body",
+            },
+            {
                 sent: "hello there",
                 timeStramp: new Date().getDate(),
                 isSent: true,
@@ -173,6 +181,15 @@ class Chats {
             messageClassName: uniqueMessageClassName,
         });
         return newSendingMessageElem;
+    }
+
+    deleteMessage(id) {
+        this.allChats.map((message) => {
+            if (message.id !== id) {
+                return message;
+            }
+        });
+        console.log(message);
     }
 }
 

@@ -7,6 +7,7 @@
 :root {
     --primary-color: green;
     --color: #555;
+    --received-message-bg-color: rgb(2, 49, 2);
     --padding: 0.5rem;
     --chat-reveal-animation-sec: 0.2s;
     --chat-width: 350px;
@@ -200,7 +201,6 @@ pre {
     position: relative;
 }
 .three-dots-button {
-    border: none;
     box-shadow: 0 5px 10px rgba(144, 144, 144, 0.638);
     background-color: #fff;
     width: 30px;
@@ -208,9 +208,10 @@ pre {
     height: 30px;
     padding: 3px 0;
     position: absolute;
-    top: 0;
+    top: 10px;
     display: none;
     transition: var(--transition-duration);
+    border: none;
 }
 .dots-icon-cont {
     display: flex;
@@ -254,6 +255,10 @@ pre {
     padding: var(--padding);
     top: 10px;
 }
+.three-dots-button.fade-out {
+    transition-duration: 0.5s; /* must not be changed to match the time the class would  be removed in js inside hideThreeDotsButtonOvertime() in the script.js file */
+    opacity: 0;
+}
 .received-message-container .three-dots-button {
     left: 0;
     transform: translateY(-105%) scale(0.8);
@@ -279,7 +284,7 @@ pre {
     align-self: flex-start;
 }
 .received-message-body {
-    background-color: rgb(2, 49, 2);
+    background-color: var(--received-message-bg-color);
 }
 
 .sent-message-body,

@@ -1,4 +1,7 @@
-import { chats } from "./data/chats.js";
+/*
+if this file name must be changed, in the styles.css, the file name (script.js) must also be changed to the name this current file(scripts.js) is changed to inside the .three-dots-button.fade-out class.
+*/
+import { chats } from "../data/chats.js";
 
 const chatSection = document.querySelector(".chat-section");
 const cancelChat = document.querySelector(".cancel-chat");
@@ -42,6 +45,7 @@ chatSection.addEventListener("click", (event) => {
     if (currentThreeDotButtonElem) {
         if (!currentThreeDotButtonElem.contains(event.target)) {
             currentThreeDotButtonElem.classList.remove("expanded");
+            hideThreeDotsButtonOvertime(currentThreeDotButtonElem);
             currentThreeDotButtonElem = undefined;
         }
     }
@@ -137,7 +141,7 @@ function sendMessage() {
 
 function listenWhenHovered(messageCont) {
     messageCont.addEventListener("mousemove", () => {
-        // hide other msgs showing the three dots button
+        // hide other three dots showing on other messages
         if (!currentThreeDotButtonElem) {
             removeShownThreeDotsButtons();
             const { messageContainerId } = messageCont.dataset;
@@ -146,10 +150,35 @@ function listenWhenHovered(messageCont) {
             );
 
             hoveredMessageThreeDotsButton.classList.add("show");
+            hideThreeDotsButtonOvertime(hoveredMessageThreeDotsButton);
         }
     });
 }
 
+let timeOut = undefined;
+async function hideThreeDotsButtonOvertime(hoveredMessageThreeDotsButton) {
+    if (timeOut) clearTimeout(timeOut);
+
+    try {
+        await new Promise((resolve, reject) => {
+            timeOut = setTimeout(() => {
+                if (
+                    !hoveredMessageThreeDotsButton.classList.contains(
+                        "expanded"
+                    )
+                ) {
+                    hoveredMessageThreeDotsButton.classList.add("fade-out");
+                    resolve();
+                }
+                return reject("Not completed!");
+            }, 3000);
+        });
+        setTimeout(() => {
+            hoveredMessageThreeDotsButton.classList.remove("fade-out");
+            hoveredMessageThreeDotsButton.classList.remove("show");
+        }, 500);
+    } catch (error) {}
+}
 function removeShownThreeDotsButtons() {
     const allMessagesContainer =
         document.querySelectorAll(".message-container");
