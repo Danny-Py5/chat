@@ -83,9 +83,11 @@ class Chats {
     }
     #getThreeDotsContainerContent() {
         return `
-            <div></div> <div></div><div></div>
-                <ul>
-                    <li>Delete</li>
+            <div class="dots-icon-cont">
+                <div></div> <div></div><div></div>
+            </div>
+            <ul>
+                <li>Delete</li>
             </ul>
         `;
     }

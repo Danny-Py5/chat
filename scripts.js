@@ -81,13 +81,12 @@ function respond() {
         uniqueMessageClassName: "received-message-body",
     });
 
-    refinedMessage.addEventListener("mouseover", () => {
+    refinedMessage.addEventListener("mousemove", () => {
         listenWhenHovered(refinedMessage);
     });
-    // console.log(chats.allChats);
-
-    // ewResponseMassageElem.appendChild(responseBodyPElem);
-    // newResponseMassageElem.classList.add("received-message-body");
+    newMessageThreeDotsButtonClickEvent(
+        refinedMessage.querySelector(".three-dots-button")
+    );
     document.querySelector(".chats").appendChild(refinedMessage);
 
     scrollDownChats();
@@ -120,25 +119,24 @@ function sendMessage() {
             uniqueContainerClassName: "sent-message-container",
             uniqueMessageClassName: "sent-message-body",
         });
-
         refinedMessage.addEventListener("mouseover", () => {
             listenWhenHovered(refinedMessage);
         });
-        document.querySelector(".chats").appendChild(refinedMessage);
-        //console.log(refinedMessage);
+        newMessageThreeDotsButtonClickEvent(
+            refinedMessage.querySelector(".three-dots-button")
+        );
 
+        document.querySelector(".chats").appendChild(refinedMessage);
         userTypedMessgeElem.focus();
         scrollDownChats();
-        // clear the message elem
         emptyMessageTextarea();
-
         callRespond();
         messageTexarea.style.height = "auto";
     }
 }
 
 function listenWhenHovered(messageCont) {
-    messageCont.addEventListener("mouseover", () => {
+    messageCont.addEventListener("mousemove", () => {
         // hide other msgs showing the three dots button
         if (!currentThreeDotButtonElem) {
             removeShownThreeDotsButtons();
@@ -146,6 +144,7 @@ function listenWhenHovered(messageCont) {
             const hoveredMessageThreeDotsButton = document.querySelector(
                 `.three-dots-button-${messageContainerId}`
             );
+
             hoveredMessageThreeDotsButton.classList.add("show");
         }
     });
@@ -162,6 +161,16 @@ function removeShownThreeDotsButtons() {
     });
 }
 
-function showMessageActions(button, event) {
+function showMessageActions(button) {
     button.classList.add("expanded");
+}
+
+function newMessageThreeDotsButtonClickEvent(threeDotsButtonElem) {
+    threeDotsButtonElem.addEventListener("click", () => {
+        if (threeDotsButtonElem.classList.contains("expanded")) {
+            threeDotsButtonElem.classList.remove("expanded");
+        }
+        showMessageActions(threeDotsButtonElem);
+        currentThreeDotButtonElem = threeDotsButtonElem;
+    });
 }
