@@ -1,6 +1,8 @@
 import { chats } from "../data/chats.js";
-import {} from "./scripts.js";
+import { sendButton, messageTextarea } from "./scripts.js";
+import { _createElement } from "../utils/chat-util.js";
 
+const chatHead = document.querySelector(".chat-head");
 const chatHeadOptionsElem = document.querySelector(".options");
 const chatHeadBackButon = document.querySelector(".back-options");
 const chatHeadDeleteButon = document.querySelector(".options_delete");
@@ -22,20 +24,45 @@ chatHeadBackButon.addEventListener("click", back);
 
 export function activateActionsOnPreviousMessages() {
     chatCont.addEventListener("click", (event) => {
+        // event.stopPropagation();
+
         if (event.target.innerText == "Delete") {
             const { id } = event.target.dataset;
             deleteHandler(id);
         } else if (event.target.innerText == "Select Many") {
             selectManyHandler(event.target.dataset.id);
+        } else if (event.target.innerText == "Edit") {
+            moveEdit(event.target.dataset.id);
         }
     });
 }
-
 function deleteHandler(id) {
     const thisButtonMessageContainer = chatCont.querySelector(
         `.message-container-${id}`
     );
+    chats.deleteMessage(id);
     thisButtonMessageContainer.remove();
+}
+
+function moveEdit(id) {
+    hideThreeDotsButton(chatCont.querySelector(`.three-dots-button-${id}`));
+    activateEditing();
+
+    const editingMessage = document.querySelector(`.editing__message-cont`);
+    editingMessage.innerHTML = chatCont.querySelector(
+        `.message-container-${id}`
+    ).outerHTML;
+    messageTextarea.value = getEditingMessageText(editingMessage);
+}
+
+function getEditingMessageText(editingMessage) {
+    return editingMessage.querySelector("pre").textContent;
+}
+
+function activateEditing() {
+    chatCont.classList.add("editing");
+    chatHead.classList.add("editing");
+    showChatHeadOptions();
 }
 
 const selectManyWeakMap = new WeakMap();
@@ -53,6 +80,7 @@ function selectManyHandler(id) {
     chatCont.addEventListener("mouseover", hoverHandler);
 
     const mouseUpHandler = (event) => {
+        // console.log("clicked the chatcont ");
         const selectedMessage = chatCont.querySelector(
             `.message-container-${event.target.dataset.id}`
         );
@@ -77,7 +105,7 @@ function cancleSelection() {
             chatCont.removeEventListener("mouseup", handler[1]);
             selectManyWeakMap.delete(chatCont);
         }
-        unhideThreeDotsButton();
+        unhideThreeDotsButtons();
     }
 }
 function showChatHeadOptions() {
@@ -95,7 +123,7 @@ function hideThreeDotsButton(button) {
         removedThreeDotsButtons.push(button);
     }
 }
-function unhideThreeDotsButton() {
+function unhideThreeDotsButtons() {
     removedThreeDotsButtons.forEach((button) => {
         button.classList.remove("hide");
     });

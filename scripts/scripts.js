@@ -7,7 +7,7 @@ import { activateActionsOnPreviousMessages } from "./chat-options.js";
 export const chatSection = document.querySelector(".chat-section");
 const cancelChat = document.querySelector(".cancel-chat");
 const chatCont = document.querySelector(".chat-cont");
-const messageTexarea = document.getElementById("message");
+export const messageTextarea = document.getElementById("message");
 const userTypedMessgeElem = document.getElementById("message");
 
 // get previous charts
@@ -50,6 +50,7 @@ chatSection.addEventListener("click", (event) => {
             currentThreeDotButtonElem = undefined;
         }
     }
+    console.log("cliked the chat section ");
 });
 
 cancelChat.addEventListener("click", (event) => {
@@ -58,17 +59,21 @@ cancelChat.addEventListener("click", (event) => {
     chatSection.classList.add("close");
 });
 
-const sendButton = document.querySelector(".send");
+export const sendButton = document.querySelector(".send");
 sendButton.addEventListener("click", sendMessage);
 
-messageTexarea.addEventListener("keydown", function (event) {
-    if (event.key == "Backspace") {
-        this.style.height = "auto";
-    } else {
-        if (this.scrollHeight < 70) {
-            this.style.height = this.scrollHeight + "px";
-            // console.log(event);
-        }
+messageTextarea.addEventListener("input", function (event) {
+    console.log(event);
+
+    // Reset height to prevent unnecessary growing
+    this.style.height = "auto";
+
+    // Adjust height based on content
+    this.style.height = Math.max(this.scrollHeight, 30) + "px";
+
+    // If deleting, ensure height adjusts properly
+    if (event.inputType === "deleteContentBackward") {
+        this.style.height = Math.max(this.scrollHeight, 30) + "px";
     }
 });
 
@@ -136,7 +141,7 @@ function sendMessage() {
         scrollDownChats();
         emptyMessageTextarea();
         callRespond();
-        messageTexarea.style.height = "auto";
+        messageTextarea.style.height = "auto";
     }
 }
 

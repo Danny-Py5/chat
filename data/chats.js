@@ -79,9 +79,9 @@ class Chats {
         } "  data-id="${message.id}">
             ${this.#getThreeDotsContainerContent(message.id)}
         </div>
-        <div class="message js-message ${message.messageClassName}" data-id="${
+        <div class="message js-message ${message.messageClassName} message-${
             message.id
-        }">
+        }" data-id="${message.id}">
             
         </div>`;
 
@@ -105,9 +105,9 @@ class Chats {
         } " data-id="${message.id}">
             ${this.#getThreeDotsContainerContent(message.id)}
         </div>
-        <div class="message js-message ${message.messageClassName}" data-id="${
+        <div class="message js-message ${message.messageClassName} message-${
             message.id
-        }">
+        }" data-id="${message.id}">
             
         </div>`;
         prevMessageElem
@@ -209,7 +209,7 @@ class Chats {
         <div class="three-dots-button three-dots-button-${newMessageId}" data-id="${newMessageId}">
             ${this.#getThreeDotsContainerContent(newMessageId)}
         </div>
-        <div class="message js-message ${uniqueMessageClassName}" data-id="${newMessageId}">
+        <div class="message js-message ${uniqueMessageClassName} message-${newMessageId}" data-id="${newMessageId} ">
             
         </div>`;
         let newMessageData = undefined;
@@ -252,6 +252,18 @@ class Chats {
         });
         console.log(this.allChats);
         this.#saveToLocalStorage();
+    }
+
+    update(id, value) {
+        this.allChats = this.allChats.map((message) => {
+            if (message.id == id) {
+                if ("sent" in message) {
+                    return (message.sent = value);
+                } else if ("receive") {
+                    return (message.receive = value);
+                }
+            }
+        });
     }
 }
 
