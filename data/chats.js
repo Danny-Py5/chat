@@ -88,6 +88,9 @@ class Chats {
             </div>
             <ul>
                 <li>Delete</li>
+                <li>Star</li>
+                <li>Like</li>
+                <li>Dislike</li>
             </ul>
         `;
     }

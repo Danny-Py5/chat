@@ -234,13 +234,25 @@ pre {
 }
 .three-dots-button.show.expanded .dots-icon-cont + ul {
     display: block;
+    text-align: left;
+    width: 100px;
 }
-
-.three-dots-button.expanded {
+.three-dots-button.show.expanded .dots-icon-cont + ul li {
+    padding: 2px 0;
+    font-size: 14px;
+    border-radius: var(--border-radius-primary);
+}
+.three-dots-button.show.expanded .dots-icon-cont + ul li:hover {
+    background-color: rgb(221, 221, 221);
+    transition: var(--transition-duration);
+    padding-left: 8px;
+}
+.three-dots-button.show.expanded {
     width: fit-content;
     height: auto;
     border-radius: var(--border-radius-primary);
     padding: var(--padding);
+    top: 10px;
 }
 .received-message-container .three-dots-button {
     left: 0;
