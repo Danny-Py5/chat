@@ -50,7 +50,7 @@ chatSection.addEventListener("click", (event) => {
             currentThreeDotButtonElem = undefined;
         }
     }
-    console.log("cliked the chat section ");
+    // console.log("cliked the chat section ");
 });
 
 cancelChat.addEventListener("click", (event) => {
@@ -63,8 +63,6 @@ export const sendButton = document.querySelector(".send");
 sendButton.addEventListener("click", sendMessage);
 
 messageTextarea.addEventListener("input", function (event) {
-    console.log(event);
-
     // Reset height to prevent unnecessary growing
     this.style.height = "auto";
 
@@ -115,16 +113,17 @@ function callRespond() {
         scrollDownChats();
     }, 500);
 }
-function emptyMessageTextarea() {
+export function emptyMessageTextarea() {
     userTypedMessgeElem.value = "";
 }
 export function restCurrentThreeDotButtonElem() {
     currentThreeDotButtonElem = undefined;
 }
 
-function sendMessage() {
+export function sendMessage() {
     // console.log(newSentMessageElement);
     const typedMessage = userTypedMessgeElem.value;
+
     if (typedMessage.trim()) {
         const refinedMessage = chats.getrefinedMessage(typedMessage, {
             uniqueContainerClassName: "sent-message-container",
@@ -195,7 +194,29 @@ export function removeShownThreeDotsButtons() {
     });
 }
 
+chatCont.addEventListener("scroll", () => {
+    if (chatCont.scrollTop < -50) {
+        // If pulled down too much
+        chatCont.scrollTop = 0; // Bounce back
+    }
+});
+
 function showMessageActions(button) {
+    const buttonRect = button.getBoundingClientRect();
+    const scroll = (by) => {
+        chatCont.scrollTo({
+            top: chatCont.scrollTop - by,
+            behavior: "smooth",
+        });
+    };
+    console.log(buttonRect);
+    if (buttonRect.top < 130) {
+        scroll(150);
+    } else if (buttonRect.top < 170) {
+        scroll(100);
+    } else if (buttonRect.top < 205) {
+        scroll(30);
+    }
     button.classList.add("expanded");
     currentThreeDotButtonElem = undefined;
 }

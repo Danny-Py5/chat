@@ -11,6 +11,7 @@ class Chats {
                 id: "023832-27922972",
                 containerClass: "sent-message-container",
                 messageClassName: "sent-message-body",
+                edited: false,
             },
             {
                 sent: "hello \nthere\nHappy new Sunday.\nWhish you good day ahead of you!",
@@ -19,6 +20,7 @@ class Chats {
                 id: "023832-27902972",
                 containerClass: "sent-message-container",
                 messageClassName: "sent-message-body",
+                edited: false,
             },
             {
                 sent: "hello there",
@@ -27,6 +29,7 @@ class Chats {
                 id: "0823892-238732",
                 containerClass: "sent-message-container",
                 messageClassName: "sent-message-body",
+                edited: false,
             },
             {
                 receive: "hello there",
@@ -35,6 +38,7 @@ class Chats {
                 id: "0823891-238932",
                 containerClass: "received-message-container",
                 messageClassName: "received-message-body",
+                edited: false,
             },
         ];
     }
@@ -50,6 +54,10 @@ class Chats {
     ) {
         const messsageBodyPreElem = _createElement("pre");
         messsageBodyPreElem.setAttribute("data-id", message.id || id);
+        messsageBodyPreElem.classList.add(
+            "message-text",
+            `message-text-${message.id || id}`
+        );
         if (isReceived) {
             messsageBodyPreElem.textContent = message.receive;
         } else if (isSent) {
@@ -221,6 +229,7 @@ class Chats {
                 id: newMessageId,
                 containerClass: uniqueContainerClassName,
                 messageClassName: uniqueMessageClassName,
+                edited: false,
             };
             this.addMessage(newMessageData);
         } else {
@@ -231,6 +240,7 @@ class Chats {
                 id: newMessageId,
                 containerClass: uniqueContainerClassName,
                 messageClassName: uniqueMessageClassName,
+                edited: false,
             };
             this.addMessage(newMessageData);
         }
@@ -255,15 +265,15 @@ class Chats {
     }
 
     update(id, value) {
-        this.allChats = this.allChats.map((message) => {
-            if (message.id == id) {
-                if ("sent" in message) {
-                    return (message.sent = value);
-                } else if ("receive") {
-                    return (message.receive = value);
-                }
-            }
-        });
+        const matchingIndex = this.allChats.findIndex(
+            (message) => message.id === id
+        );
+
+        if (matchingIndex !== -1) {
+            // Ensure the message exists
+            this.allChats[matchingIndex].sent = value;
+            this.#saveToLocalStorage();
+        }
     }
 }
 

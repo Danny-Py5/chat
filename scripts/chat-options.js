@@ -1,5 +1,10 @@
 import { chats } from "../data/chats.js";
-import { sendButton, messageTextarea } from "./scripts.js";
+import {
+    sendButton,
+    sendMessage,
+    emptyMessageTextarea,
+    messageTextarea,
+} from "./scripts.js";
 import { _createElement } from "../utils/chat-util.js";
 
 const chatHead = document.querySelector(".chat-head");
@@ -7,6 +12,7 @@ const chatHeadOptionsElem = document.querySelector(".options");
 const chatHeadBackButon = document.querySelector(".back-options");
 const chatHeadDeleteButon = document.querySelector(".options_delete");
 const chatCont = document.querySelector(".chat-cont");
+const actionCont = document.querySelector(".actions-cont");
 
 const selectedMessagesId = [];
 const removedThreeDotsButtons = [];
@@ -45,14 +51,44 @@ function deleteHandler(id) {
 }
 
 function moveEdit(id) {
+    sendButton.removeEventListener("click", sendMessage);
+    messageTextarea.focus();
+
     hideThreeDotsButton(chatCont.querySelector(`.three-dots-button-${id}`));
     activateEditing();
+
+    const mouseDownhandler = () => {
+        updateMessageText(id);
+    };
 
     const editingMessage = document.querySelector(`.editing__message-cont`);
     editingMessage.innerHTML = chatCont.querySelector(
         `.message-container-${id}`
     ).outerHTML;
+    const previousInputMessage = messageTextarea.value;
     messageTextarea.value = getEditingMessageText(editingMessage);
+
+    sendButton.addEventListener("mousedown", mouseDownhandler);
+    const removeEventsAfterMouseUp = () => {
+        messageTextarea.value = previousInputMessage;
+        sendButton.removeEventListener("mousedown", mouseDownhandler);
+        sendButton.addEventListener("click", sendMessage);
+
+        setTimeout(() => {
+            sendButton.removeEventListener("mouseup", removeEventsAfterMouseUp);
+            deActivateEditing();
+            unhideThreeDotsButton(
+                chatCont.querySelector(`.three-dots-button-${id}`)
+            );
+        }, 100);
+    };
+    sendButton.addEventListener("mouseup", removeEventsAfterMouseUp);
+}
+
+function updateMessageText(id) {
+    chats.update(id, messageTextarea.value);
+    chatCont.querySelector(`.message-text-${id}`).innerText =
+        messageTextarea.value;
 }
 
 function getEditingMessageText(editingMessage) {
@@ -63,6 +99,11 @@ function activateEditing() {
     chatCont.classList.add("editing");
     chatHead.classList.add("editing");
     showChatHeadOptions();
+}
+function deActivateEditing() {
+    chatCont.classList.remove("editing");
+    chatHead.classList.remove("editing");
+    hideChatHeadOptions();
 }
 
 const selectManyWeakMap = new WeakMap();
@@ -123,10 +164,17 @@ function hideThreeDotsButton(button) {
         removedThreeDotsButtons.push(button);
     }
 }
+function unhideThreeDotsButton(button) {
+    if (button.classList.contains("hide")) {
+        button.classList.remove("hide");
+        removedThreeDotsButtons.push(button);
+    }
+}
 function unhideThreeDotsButtons() {
     removedThreeDotsButtons.forEach((button) => {
         button.classList.remove("hide");
     });
+    // clear the array
     removedThreeDotsButtons.splice(0);
     // console.log(removedThreeDotsButtons)
 }

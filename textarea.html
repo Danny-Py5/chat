@@ -11,12 +11,29 @@
                 height: 15px;
                 padding: 0.4rem;
             }
+            .box {
+                width: 100px;
+                height: 100px;
+                background-color: #333;
+            }
         </style>
     </head>
     <body>
-        <textarea
-            name="message"
-            placeholder="Type here"
-            id="message"></textarea>
+        <button>Click </button>
+        <div class="box"></div>
     </body>
+
+    <script>
+        document.querySelector("button").addEventListener("click", () => {
+            setTimeout(() => {
+                alert("executed after 2s");
+            }, 2000);
+        });
+        const box = document.querySelector(".box");
+        const rect = box.getBoundingClientRect();
+        console.log(rect);
+        if (rect.top < 100) {
+            console.log("The box is too close to the top!");
+        }
+    </script>
 </html>
