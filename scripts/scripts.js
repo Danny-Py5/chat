@@ -6,7 +6,7 @@ import { activateActionsOnPreviousMessages } from "./chat-options.js";
 
 export const chatSection = document.querySelector(".chat-section");
 const cancelChat = document.querySelector(".cancel-chat");
-const chatCont = document.querySelector(".chat-cont");
+export const chatCont = document.querySelector(".chat-cont");
 export const messageTextarea = document.getElementById("message");
 const userTypedMessgeElem = document.getElementById("message");
 
@@ -58,6 +58,7 @@ cancelChat.addEventListener("click", (event) => {
     chatSection.classList.remove("open");
     chatSection.classList.add("close");
 });
+
 
 export const sendButton = document.querySelector(".send");
 sendButton.addEventListener("click", sendMessage);
@@ -121,10 +122,10 @@ export function restCurrentThreeDotButtonElem() {
 }
 
 export function sendMessage() {
-    // console.log(newSentMessageElement);
-    const typedMessage = userTypedMessgeElem.value;
+    console.log("sendMessage() executed now.");
+    const typedMessage = userTypedMessgeElem.value.trim();
 
-    if (typedMessage.trim()) {
+    if (typedMessage) {
         const refinedMessage = chats.getrefinedMessage(typedMessage, {
             uniqueContainerClassName: "sent-message-container",
             uniqueMessageClassName: "sent-message-body",
@@ -142,6 +143,7 @@ export function sendMessage() {
         callRespond();
         messageTextarea.style.height = "auto";
     }
+    userTypedMessgeElem.focus();
 }
 
 export function listenWhenHovered(messageCont, event) {
@@ -194,13 +196,6 @@ export function removeShownThreeDotsButtons() {
     });
 }
 
-chatCont.addEventListener("scroll", () => {
-    if (chatCont.scrollTop < -50) {
-        // If pulled down too much
-        chatCont.scrollTop = 0; // Bounce back
-    }
-});
-
 function showMessageActions(button) {
     const buttonRect = button.getBoundingClientRect();
     const scroll = (by) => {
@@ -209,13 +204,15 @@ function showMessageActions(button) {
             behavior: "smooth",
         });
     };
-    console.log(buttonRect);
+    // console.log(buttonRect);
     if (buttonRect.top < 130) {
-        scroll(150);
+        scroll(170);
     } else if (buttonRect.top < 170) {
-        scroll(100);
+        scroll(130);
     } else if (buttonRect.top < 205) {
-        scroll(30);
+        scroll(80);
+    } else if (buttonRect.top < 235) {
+        scroll(50);
     }
     button.classList.add("expanded");
     currentThreeDotButtonElem = undefined;

@@ -25,7 +25,7 @@
                 <div class="profile-cont js-profile-cont">
                     <div class="user-img-cont"></div>
                     <div class="user-details">
-                        <p><strong>Daniel Olatunde</strong></p>
+                        <p class="user-name"><strong>Kemisola</strong></p>
                         <p>online</p>
                     </div>
                 </div>
@@ -40,11 +40,33 @@
             </div>
             <div class="editing__message-cont"></div>
 
-            <div class="actions-cont padding">
-                <textarea
-                    name="messge"
-                    id="message"
-                    placeholder="Write your message"></textarea>
+            <div class="actions-cont padding" id="messageInputSectionContainer">
+                <div class="message-input-cont">
+                    <div class="reply-cont">
+                        <div class="reply">
+                            <div
+                                class="center-flex"
+                                style="justify-content: space-between">
+                                <h5 class="message-owner"></h5>
+                                <button
+                                    class="cancel-reply"
+                                    style="
+                                        border: none;
+                                        padding: 0;
+                                        background-color: #00000000;
+                                        font: inherit;
+                                    "
+                                    >&times;</button
+                                ></div
+                            >
+                            <div class="reply-text"></div>
+                        </div>
+                    </div>
+                    <textarea
+                        name="messge"
+                        id="message"
+                        placeholder="Write your message"></textarea>
+                </div>
                 <button class="send center-flex"
                     ><div class="send-icon"></div
                 ></button>

@@ -393,14 +393,49 @@ pre {
     grid-template-columns: 1fr 50px;
     gap: 8px;
     height: fit-content;
-    background-color: #00000000;
+    transition: var(--transition-duration);
+}
+.message-input-cont {
+    padding-top: 8px;
+    background-color: rgba(175, 211, 173, 0.377);
+    border-radius: var(--border-radius-secondary);
+}
+.reply-cont {
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: inherit;
+    /* margin-bottom: 35px; */
+    display: none;
+    transform: translateY(5px);
+}
+@keyframes moveUp {
+    to {
+        transform: translateY(0);
+    }
+}
+.reply-cont.show {
+    display: block;
+    animation: moveUp 0.2s ease forwards;
+}
+.reply {
+    border-left: 3px solid rgb(239, 160, 3);
+    border-radius: 5px;
+    padding: 0 0 0 8px;
+    background-color: rgba(175, 211, 173, 0.44);
+}
+.reply-text pre {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    /* overflow: hidden must be there to hide the other text */
+    overflow: hidden;
 }
 #message,
 .send {
     border-radius: var(--border-radius-secondary);
 }
 #message {
-    background-color: #d7d7d780;
+    background-color: #00000000;
     border: none;
     font-family: inherit;
     font-size: 0.9rem;
@@ -412,9 +447,13 @@ pre {
     letter-spacing: 0.5px;
     height: 30px;
     max-height: 100px;
+    width: 100%;
+    transform: translateY(3px);
 }
+
 #message:focus {
-    outline: 2px solid var(--primary-color);
+    /* outline: 2px solid var(--primary-color); */
+    outline: none;
 }
 .send {
     padding: 1rem 0.5rem;
@@ -481,24 +520,5 @@ pre {
     }
     .cancel-chat {
         display: none;
-    }
-    .chat-cont {
-        margin-bottom: 50px;
-    }
-
-    .actions-cont {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background-color: var(--bg);
-    }
-    .chat-head.editing ~ .chat-cont {
-        margin-bottom: 0;
-    }
-    .chat-cont.editing ~ .editing__message-cont {
-        margin-bottom: 60px;
-        margin-top: 0;
-        /* height: 100%; */
     }
 }

@@ -3,44 +3,46 @@ import { _createElement } from "../utils/chat-util.js";
 
 class Chats {
     constructor() {
-        this.allChats = JSON.parse(localStorage.getItem("chats")) || [
-            {
-                sent: "hello \nthere",
-                timeStramp: new Date().toISOString(),
-                isSent: true,
-                id: "023832-27922972",
-                containerClass: "sent-message-container",
-                messageClassName: "sent-message-body",
-                edited: false,
-            },
-            {
-                sent: "hello \nthere\nHappy new Sunday.\nWhish you good day ahead of you!",
-                timeStramp: new Date().toISOString(),
-                isSent: true,
-                id: "023832-27902972",
-                containerClass: "sent-message-container",
-                messageClassName: "sent-message-body",
-                edited: false,
-            },
-            {
-                sent: "hello there",
-                timeStramp: new Date().toISOString(),
-                isSent: true,
-                id: "0823892-238732",
-                containerClass: "sent-message-container",
-                messageClassName: "sent-message-body",
-                edited: false,
-            },
-            {
-                receive: "hello there",
-                timeStramp: new Date().toISOString(),
-                isSent: false,
-                id: "0823891-238932",
-                containerClass: "received-message-container",
-                messageClassName: "received-message-body",
-                edited: false,
-            },
-        ];
+        this.allChats =
+            JSON.parse(localStorage.getItem("chats")) ||
+            [
+                //     {
+                //         sent: "hello \nthere",
+                //         timeStramp: new Date().toISOString(),
+                //         isSent: true,
+                //         id: "023832-27922972",
+                //         containerClass: "sent-message-container",
+                //         messageClassName: "sent-message-body",
+                //         edited: false,
+                //     },
+                //     {
+                //         sent: "hello \nthere\nHappy new Sunday.\nWhish you good day ahead of you!",
+                //         timeStramp: new Date().toISOString(),
+                //         isSent: true,
+                //         id: "023832-27902972",
+                //         containerClass: "sent-message-container",
+                //         messageClassName: "sent-message-body",
+                //         edited: false,
+                //     },
+                //     {
+                //         sent: "hello there",
+                //         timeStramp: new Date().toISOString(),
+                //         isSent: true,
+                //         id: "0823892-238732",
+                //         containerClass: "sent-message-container",
+                //         messageClassName: "sent-message-body",
+                //         edited: false,
+                //     },
+                //     {
+                //         receive: "hello there",
+                //         timeStramp: new Date().toISOString(),
+                //         isSent: false,
+                //         id: "0823891-238932",
+                //         containerClass: "received-message-container",
+                //         messageClassName: "received-message-body",
+                //         edited: false,
+                //     },
+            ];
     }
 
     #saveToLocalStorage() {
@@ -136,22 +138,25 @@ class Chats {
             </div>
             <ul data-id=${id}>
                 <li data-id=${id}>
-                    <button class="delete delete-${id}" data-id="${id}">Delete</button>
+                    <button class="reply reply-${id}" data-name="reply" data-id="${id}">Reply</button>
                 </li>
                 <li data-id=${id}>
-                    <button class="edit edit-${id}" data-id="${id}">Edit</button>
+                    <button class="delete delete-${id}" data-name="delete" data-id="${id}">Delete</button>
                 </li>
                 <li data-id=${id}>
-                    <button class="star star-${id}" data-id="${id}">Star</button>
+                    <button class="edit edit-${id}" data-name="edit" data-id="${id}">Edit</button>
                 </li>
                 <li data-id=${id}>
-                    <button class="like like-${id}" data-id="${id}">Like</button>
+                    <button class="star star-${id}" data-name="star" data-id="${id}">Star</button>
                 </li>
                 <li data-id=${id}>
-                    <button class="dislike dislike-${id}" data-id="${id}">Dislike</button>
+                    <button class="like like-${id}" data-name="like" data-id="${id}">Like</button>
                 </li>
                 <li data-id=${id}>
-                    <button class="select-many select-many-${id}" data-id="${id}">Select Many</button>
+                    <button class="dislike dislike-${id}" data-name="dislike" data-id="${id}">Dislike</button>
+                </li>
+                <li data-id=${id}>
+                    <button class="select-many select-many-${id}" data-name="select many" data-id="${id}">Select Many</button>
                 </li>
             </ul>
         `;
