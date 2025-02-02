@@ -1,6 +1,7 @@
 const chatSection = document.querySelector(".chat-section");
 const cancelChat = document.querySelector(".cancel-chat");
 const chatCont = document.querySelector(".chat-cont");
+const messageTexarea = document.getElementById("message");
 const userTypedMessgeElem = document.getElementById("message");
 
 function scrollDownChats() {
@@ -28,11 +29,11 @@ function _createElement(type) {
 
 function sendMessage() {
     let newSentMassageElem = _createElement("div");
-    let messsageBodyPElem = document.createElement("p");
+    let messsageBodyPreElem = document.createElement("pre");
 
     if (userTypedMessgeElem.value.trim()) {
-        messsageBodyPElem.textContent = userTypedMessgeElem.value;
-        newSentMassageElem.appendChild(messsageBodyPElem);
+        messsageBodyPreElem.textContent = userTypedMessgeElem.value;
+        newSentMassageElem.appendChild(messsageBodyPreElem);
         newSentMassageElem.classList.add("sent-message-body");
 
         document.querySelector(".chats").appendChild(newSentMassageElem);
@@ -42,6 +43,7 @@ function sendMessage() {
         // clear the message elem
         emptyMessageTextarea();
         callRespond();
+        messageTexarea.style.height = "auto";
     }
 }
 const randomResponses = [
@@ -77,7 +79,6 @@ cancelChat.addEventListener("click", (event) => {
 const sendButton = document.querySelector(".send");
 sendButton.addEventListener("click", sendMessage);
 
-const messageTexarea = document.getElementById("message");
 messageTexarea.addEventListener("keydown", function (event) {
     if (event.key == "Backspace") {
         this.style.height = "auto";
