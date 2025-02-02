@@ -1,0 +1,234 @@
+* {
+    margin: 0;
+    box-sizing: border-box;
+    padding: 0;
+}
+
+:root {
+    --primary-color: green;
+    --color: #555;
+    --padding: 0.5rem;
+    --chat-reveal-animation-sec: 0.2s;
+}
+body {
+    /* padding: .3rem; */
+    font-size: 1rem;
+    background-color: #f2f2f9;
+    font-family: Arial, Helvetica, sans-serif;
+    /* position: relative; */
+}
+.padding {
+    padding: var(--padding);
+}
+.chat-cont,
+.chat-section {
+}
+
+.chat-section {
+    background-color: rgb(242, 242, 242);
+    box-shadow: 0 0 30px rgba(173, 173, 173, 0.671);
+    /* max-width: 300px; */
+    display: flex;
+    /* min-height: 90vh; */
+    margin: auto;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 100%;
+    height: 70px;
+    width: 70px;
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+.chat-section i {
+    margin: 18% auto;
+    padding: 1rem;
+    border-radius: 100%;
+    transform: scale(1.4);
+}
+
+.chat-section.open {
+    overflow: unset;
+    border-radius: 1rem;
+    animation: pupShow var(--chat-reveal-animation-sec) ease-out both;
+}
+.chat-section i {
+    position: absolute;
+    top: 0;
+    padding: 1.1rem;
+    border-radius: 100%;
+    transform: scale(1.4);
+}
+.chat-section:not(.close) i {
+    display: none;
+}
+
+.chat-section.close {
+    animation: shrinkChat var(--chat-reveal-animation-sec) ease-out forwards;
+}
+@keyframes pupShow {
+    from {
+        width: 70px;
+        height: 70px;
+    }
+    to {
+        width: 300px;
+        height: 90vh;
+    }
+}
+@keyframes shrinkChat {
+    from {
+        width: 300px;
+        height: 90vh;
+        border-radius: 1rem;
+    }
+    90% {
+        border-radius: 100%;
+    }
+    to {
+        width: 70px;
+        height: 70px;
+    }
+}
+.profile-cont {
+    /* border-bottom: 1px solid var(--color); */
+    height: fit-content;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.105);
+}
+.profile-img-cont {
+    width: 50px;
+    height: 50px;
+    background-color: var(--color);
+    border-radius: 50px;
+    outline: 2px solid var(--primary-color);
+    outline-offset: 1px;
+}
+/* cancell-chat button */
+.cancel-chat {
+    cursor: pointer;
+    width: 25px;
+    height: 20px;
+    position: relative;
+    background-color: #00000000;
+    border: none;
+}
+.cancel-chat div:first-of-type,
+.cancel-chat div:last-of-type {
+    width: 100%;
+    height: 4px;
+    background-color: rgba(255, 0, 47, 0.794);
+    position: absolute;
+    top: 5px;
+    border-radius: 10px;
+}
+.cancel-chat div:first-of-type {
+    transform: rotate(45deg);
+}
+.cancel-chat div:last-of-type {
+    transform: rotate(-45deg);
+}
+/* cancell-chat button  done*/
+
+.chat-cont {
+    /* background-color: antiquewhite; */
+    flex: 1;
+    gap: 8px;
+    overflow: auto;
+}
+
+.chats {
+    display: flex;
+    /* background-color: red; */
+    flex-direction: column;
+    width: 100%;
+    row-gap: 4px;
+}
+
+.sent-message-body {
+    background-color: var(--primary-color);
+    align-self: flex-end;
+}
+
+.received-message-body {
+    background-color: rgb(2, 49, 2);
+    align-self: flex-start;
+}
+
+.sent-message-body,
+.received-message-body {
+    max-width: 80%;
+    color: white;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    word-wrap: break-word;
+}
+
+/* actions container */
+.actions-cont {
+    /* background-color: green; */
+    display: grid;
+    grid-template-columns: 1fr 50px;
+    gap: 8px;
+    /* padding: var(--padding); */
+}
+#message {
+    border-radius: 0.5rem;
+    background-color: #d7d7d780;
+    border: none;
+    font: inherit;
+    padding: 0.3rem;
+    color: grey;
+    transition: 0.5s;
+    resize: none;
+}
+#message:focus {
+    outline: 2px solid var(--primary-color);
+    position: relative;
+}
+#message::placeholder {
+    position: absolute;
+    top: 50%;
+    left: 2%;
+    transform: translateY(-50%);
+}
+.send {
+    border-radius: 0.5rem;
+    padding: 1rem 0.5rem;
+    border: none;
+    background-color: var(--primary-color);
+    color: white;
+    font: inherit;
+    align-self: flex-end;
+}
+
+.user {
+    position: absolute;
+    right: 0;
+}
+.user-other {
+    position: absolute;
+    left: 0;
+}
+.dd {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    height: 1000px;
+}
+.box {
+    background-color: red;
+    /* height: 100px; */
+}
+
+@media (max-width: 400px) {
+    .chat-section {
+        max-width: 100%;
+        min-height: 100vh;
+        border-radius: 0;
+        border: none;
+    }
+}
