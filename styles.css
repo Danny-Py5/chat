@@ -65,7 +65,7 @@ pre {
     position: absolute;
     content: "Chat";
     inset: 0;
-    border-radius: 100%;
+    /* border-radius: 100%; */
     /* transform: scale(1.4); */
     z-index: 4;
     display: flex;
@@ -112,6 +112,10 @@ pre {
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
     /* background-color: red; */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.105);
 }
@@ -157,7 +161,8 @@ pre {
 /* cancell-chat button  done*/
 
 .chat-cont {
-    /* background-color: antiquewhite; */
+    background-color: antiquewhite;
+    margin: 70px 0;
     flex: 1;
     gap: 8px;
     overflow: auto;
@@ -192,9 +197,15 @@ pre {
 /* actions container */
 .actions-cont {
     /* background-color: green; */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
     display: grid;
     grid-template-columns: 1fr 50px;
     gap: 8px;
+    margin-top: 100px;
+    height: fit-content;
     /* padding: var(--padding); */
 }
 #message {
