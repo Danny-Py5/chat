@@ -11,7 +11,10 @@
     --chat-reveal-animation-sec: 0.2s;
     --chat-width: 350px;
     --chat-height: 90vh;
+
     --chat-width-height-primary: 80px;
+
+    --bg: #f2f2f2;
 }
 body {
     /* padding: .3rem; */
@@ -19,6 +22,7 @@ body {
     background-color: #f2f2f9;
     font-family: Arial, Helvetica, sans-serif;
     /* position: relative; */
+    height: 100vh;
 }
 pre {
     font: inherit;
@@ -159,11 +163,11 @@ pre {
     transform: rotate(-45deg);
 }
 /* cancell-chat button  done*/
-
 .chat-cont {
-    background-color: antiquewhite;
+    /* background-color: antiquewhite; */
     margin: 70px 0;
     flex: 1;
+    width: 100%;
     gap: 8px;
     overflow: auto;
 }
@@ -172,7 +176,7 @@ pre {
     display: flex;
     /* background-color: red; */
     flex-direction: column;
-    width: 100%;
+    /* width: fit-content; */
     row-gap: 4px;
 }
 
@@ -238,12 +242,40 @@ pre {
     align-self: flex-end;
 }
 
-@media (max-width: 400px) {
+@media (max-width: 450px) {
     :root {
         --chat-width: 100%;
         --chat-height: 100%;
+        --chat-width-height-primary: 100%;
     }
-    .chat-section:not(.close) {
+    .chat-section {
+        border-radius: 0;
+        max-height: var(--chat-width-height-primary);
+
+        position: unset;
+        bottom: 20px;
+        right: 20px;
+    }
+    .chat-head {
+        position: fixed;
+        background-color: var(--bg);
+    }
+    /* .chat-section:not(.close) {
         inset: 0;
+    } */
+
+    .chat-section:not(.open)::before {
+        display: none;
+    }
+    .chat-section.close {
+        animation: none;
+    }
+    .cancel-chat {
+        display: none;
+    }
+
+    .actions-cont {
+        position: fixed;
+        background-color: var(--bg);
     }
 }

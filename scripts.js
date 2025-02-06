@@ -83,7 +83,7 @@ messageTexarea.addEventListener("keydown", function (event) {
     if (event.key == "Backspace") {
         this.style.height = "auto";
     } else {
-        if (this.scrollHeight < 110) {
+        if (this.scrollHeight < 70) {
             this.style.height = this.scrollHeight + "px";
             // console.log(event);
         }
