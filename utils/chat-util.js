@@ -8,3 +8,7 @@ export function getId() {
 
     return id;
 }
+
+export function _createElement(type) {
+    return document.createElement(`${type}`);
+}

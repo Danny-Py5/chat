@@ -29,6 +29,7 @@ button {
 }
 pre {
     font: inherit;
+    text-align: left;
     word-wrap: break-word;
     white-space: pre-wrap;
     overflow-wrap: break-word;

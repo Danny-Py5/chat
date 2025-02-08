@@ -53,32 +53,37 @@ messageTexarea.addEventListener("keydown", function (event) {
     }
 });
 
+function listenOnHovered(message) {
+    message.addEventListener("mouseover", () => {
+        const { id: messageId } = msg.dataset;
+        console.log(messageId);
+        const hoveredMessage = document.querySelector(
+            `.three-dots-button-${messageId}`
+        );
+        hoveredMessage.classList.add("show");
+    });
+}
+
 function getPreviousChats() {
-    document.querySelector(".chats").innerHTML = chats.getChats();
+    chats.getChats();
     scrollDownChats();
 }
 
 function respond() {
-    let newResponseMassageElem = document.createElement("div");
-    let responseBodyPElem = document.createElement("p");
-
     const responseIndex = Math.floor(Math.random() * randomResponses.length);
     const response = randomResponses[responseIndex];
-    responseBodyPElem.textContent = response;
 
-    console.log(response);
-
-    chats.addMessage({
-        receive: response,
-        timeStramp: new Date().getDate(),
-        isSent: false,
-        id: getId(),
+    const refinedMessage = chats.getrefinedMessage(response, {
+        uniqueContainerClassName: "received-message-container",
+        uniqueMessageClassName: "received-message-body",
     });
-    console.log(chats.allChats);
+    // console.log(chats.allChats);
 
-    newResponseMassageElem.appendChild(responseBodyPElem);
-    newResponseMassageElem.classList.add("received-message-body");
-    document.querySelector(".chats").appendChild(newResponseMassageElem);
+    // ewResponseMassageElem.appendChild(responseBodyPElem);
+    // newResponseMassageElem.classList.add("received-message-body");
+    document.querySelector(".chats").appendChild(refinedMessage);
+
+    scrollDownChats();
 }
 
 function scrollDownChats() {
@@ -100,40 +105,20 @@ function callRespond() {
     }, 500);
 }
 
-function _createElement(type) {
-    return document.createElement(`${type}`);
-}
-
 function sendMessage() {
-    const newMessageId = getId();
-    let newSentMessageElement = _createElement("div");
-    newSentMessageElement.classList.add(
-        `message-container`,
-        `message-${newMessageId}`,
-        `sent-message-container`
-    );
     // console.log(newSentMessageElement);
-
-    let messsageBodyPreElem = document.createElement("pre");
     const typedMessage = userTypedMessgeElem.value;
     if (typedMessage.trim()) {
-        newSentMessageElement.innerHTML = `
-        <button class="three-dots-button three-dots-button-${newMessageId}">
-            <div></div> <div></div><div></div>
-        </button>
-        <div class="message  js-message sent-message-body" data-id="${newMessageId}">
-            <pre>
-                ${typedMessage}
-            </pre>
-        </div>`;
-
-        chats.addMessage({
-            sent: userTypedMessgeElem.value,
-            timeStramp: new Date().getDate(),
-            isSent: true,
-            id: newMessageId,
+        const refinedMessage = chats.getrefinedMessage(typedMessage, {
+            uniqueContainerClassName: "sent-message-container",
+            uniqueMessageClassName: "sent-message-body",
         });
-        document.querySelector(".chats").appendChild(newSentMessageElement);
+
+        // refinedMessage.addEventListener('mouseover', () => {
+        //     listenOnHovered
+        // })
+        document.querySelector(".chats").appendChild(refinedMessage);
+        console.log(refinedMessage);
 
         userTypedMessgeElem.focus();
         scrollDownChats();
@@ -142,6 +127,5 @@ function sendMessage() {
 
         callRespond();
         messageTexarea.style.height = "auto";
-        getChats();
     }
 }
