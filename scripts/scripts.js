@@ -2,30 +2,36 @@
 if this file name must be changed, in the styles.css, the file name (script.js) must also be changed to the name this current file(scripts.js) is changed to inside the .three-dots-button.fade-out class.
 */
 import { chats } from "../data/chats.js";
+import {
+    activateActionsOnPreviousMessages,
+    activateActionsOnNewMessage,
+} from "./chat-options.js";
 
-const chatSection = document.querySelector(".chat-section");
+export const chatSection = document.querySelector(".chat-section");
 const cancelChat = document.querySelector(".cancel-chat");
 const chatCont = document.querySelector(".chat-cont");
 const messageTexarea = document.getElementById("message");
 const userTypedMessgeElem = document.getElementById("message");
 
 // get previous charts
-getPreviousChats();
+loadChats();
+activateActionsOnPreviousMessages();
+
 // hovered messages
 document.querySelectorAll(".message-container").forEach((messageCont) => {
     listenWhenHovered(messageCont);
 });
 
-let currentThreeDotButtonElem = undefined;
+export let currentThreeDotButtonElem = undefined;
 const threeDotsButtonElements = document.querySelectorAll(".three-dots-button");
 
 threeDotsButtonElements.forEach((button) => {
     button.addEventListener("click", (event) => {
-        [...threeDotsButtonElements].map((button) => {
-            if (button.classList.contains("expanded")) {
-                button.classList.remove("expanded");
-            }
-        });
+        // [...threeDotsButtonElements].map((button) => {
+        //     if (button.classList.contains("expanded")) {
+        //         button.classList.remove("expanded");
+        //     }
+        // });
         showMessageActions(button, event);
         currentThreeDotButtonElem = button;
     });
@@ -71,7 +77,7 @@ messageTexarea.addEventListener("keydown", function (event) {
     }
 });
 
-function getPreviousChats() {
+export function loadChats() {
     chats.getChats();
     scrollDownChats();
 }
@@ -91,6 +97,7 @@ function respond() {
     newMessageThreeDotsButtonClickEvent(
         refinedMessage.querySelector(".three-dots-button")
     );
+    activateActionsOnNewMessage(refinedMessage);
     document.querySelector(".chats").appendChild(refinedMessage);
 
     scrollDownChats();
@@ -103,16 +110,17 @@ function scrollDownChats() {
         behavior: "smooth",
     });
 }
-
-function emptyMessageTextarea() {
-    userTypedMessgeElem.value = "";
-}
-
 function callRespond() {
     setTimeout(() => {
         respond();
         scrollDownChats();
     }, 500);
+}
+function emptyMessageTextarea() {
+    userTypedMessgeElem.value = "";
+}
+export function restCurrentThreeDotButtonElem() {
+    currentThreeDotButtonElem = undefined;
 }
 
 function sendMessage() {
@@ -129,6 +137,7 @@ function sendMessage() {
         newMessageThreeDotsButtonClickEvent(
             refinedMessage.querySelector(".three-dots-button")
         );
+        activateActionsOnNewMessage(refinedMessage);
 
         document.querySelector(".chats").appendChild(refinedMessage);
         userTypedMessgeElem.focus();
@@ -192,6 +201,7 @@ function removeShownThreeDotsButtons() {
 
 function showMessageActions(button) {
     button.classList.add("expanded");
+    currentThreeDotButtonElem = undefined;
 }
 
 function newMessageThreeDotsButtonClickEvent(threeDotsButtonElem) {

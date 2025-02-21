@@ -1,4 +1,4 @@
-import { getId } from "../utils/chat-util.js";
+import { getId, formatDate } from "../utils/chat-util.js";
 import { _createElement } from "../utils/chat-util.js";
 
 class Chats {
@@ -6,7 +6,7 @@ class Chats {
         this.allChats = JSON.parse(localStorage.getItem("chats")) || [
             {
                 sent: "hello \nthere",
-                timeStramp: new Date().getDate(),
+                timeStramp: new Date().toISOString(),
                 isSent: true,
                 id: "023832-27922972",
                 containerClass: "sent-message-container",
@@ -14,7 +14,7 @@ class Chats {
             },
             {
                 sent: "hello \nthere\nHappy new Sunday.\nWhish you good day ahead of you!",
-                timeStramp: new Date().getDate(),
+                timeStramp: new Date().toISOString(),
                 isSent: true,
                 id: "023832-27902972",
                 containerClass: "sent-message-container",
@@ -22,7 +22,7 @@ class Chats {
             },
             {
                 sent: "hello there",
-                timeStramp: new Date().getDate(),
+                timeStramp: new Date().toISOString(),
                 isSent: true,
                 id: "0823892-238732",
                 containerClass: "sent-message-container",
@@ -30,7 +30,7 @@ class Chats {
             },
             {
                 receive: "hello there",
-                timeStramp: new Date().getDate(),
+                timeStramp: new Date().toISOString(),
                 isSent: false,
                 id: "0823891-238932",
                 containerClass: "received-message-container",
@@ -43,26 +43,49 @@ class Chats {
         const chatsStringify = JSON.stringify(this.allChats);
         localStorage.setItem("chats", chatsStringify);
     }
+    #getMessageBody(
+        message,
+        { isReceived = false, isSent = false, isNewMessage = false } = {}
+    ) {
+        const messsageBodyPreElem = _createElement("pre");
+        if (isReceived) {
+            messsageBodyPreElem.textContent = message.receive;
+        } else if (isSent) {
+            messsageBodyPreElem.textContent = message.sent;
+        } else if (isNewMessage) {
+            messsageBodyPreElem.textContent = message;
+        }
+        return messsageBodyPreElem;
+    }
+
+    #setDate(messageElement, messageData) {
+        const dateElement = _createElement("div");
+
+        dateElement.classList.add("date");
+        dateElement.innerHTML = formatDate(messageData.timeStramp);
+        messageElement.querySelector(".message").appendChild(dateElement);
+    }
     #getPreviousRefinedSentMessage(message) {
         const { newSendingMessageElem: prevMessageElem } =
             chats.#createMessageContainerElement(message.containerClass, {
                 id: message.id,
             });
         prevMessageElem.innerHTML = `
-        <button class="three-dots-button three-dots-button-${message.id} ">
-            ${this.#getThreeDotsContainerContent()}
-        </button>
+        <div class="three-dots-button three-dots-button-${
+            message.id
+        } "  data-id="${message.id}">
+            ${this.#getThreeDotsContainerContent(message.id)}
+        </div>
         <div class="message js-message ${message.messageClassName}" data-id="${
             message.id
         }">
             
         </div>`;
-        const messsageBodyPreElem = _createElement("pre");
-        messsageBodyPreElem.textContent = message.sent;
 
         prevMessageElem
             .querySelector(".message")
-            .appendChild(messsageBodyPreElem);
+            .appendChild(this.#getMessageBody(message, { isSent: true }));
+        this.#setDate(prevMessageElem, message);
 
         return prevMessageElem;
     }
@@ -72,33 +95,44 @@ class Chats {
                 id: message.id,
             });
         prevMessageElem.innerHTML = `
-        <button class="three-dots-button three-dots-button-${message.id} ">
-            ${this.#getThreeDotsContainerContent()}
-        </button>
+        <div class="three-dots-button three-dots-button-${
+            message.id
+        } " data-id="${message.id}">
+            ${this.#getThreeDotsContainerContent(message.id)}
+        </div>
         <div class="message js-message ${message.messageClassName}" data-id="${
             message.id
         }">
             
         </div>`;
-        const messsageBodyPreElem = _createElement("pre");
-        messsageBodyPreElem.textContent = message.receive;
-
         prevMessageElem
             .querySelector(".message")
-            .appendChild(messsageBodyPreElem);
+            .appendChild(this.#getMessageBody(message, { isReceived: true }));
+        this.#setDate(prevMessageElem, message);
 
         return prevMessageElem;
     }
-    #getThreeDotsContainerContent() {
+    #getThreeDotsContainerContent(id) {
         return `
             <div class="dots-icon-cont">
                 <div></div> <div></div><div></div>
             </div>
             <ul>
-                <li>Delete</li>
-                <li>Star</li>
-                <li>Like</li>
-                <li>Dislike</li>
+                <li>
+                    <button class="delete delete-${id}" data-id="${id}">Delete</button>
+                </li>
+                <li>
+                    <button class="star star-${id}" data-id="${id}">Star</button>
+                </li>
+                <li>
+                    <button class="like like-${id}" data-id="${id}">Like</button>
+                </li>
+                <li>
+                    <button class="dislike dislike-${id}" data-id="${id}">Dislike</button>
+                </li>
+                <li>
+                    <button class="select-many select-many-${id}" data-id="${id}">Select Many</button>
+                </li>
             </ul>
         `;
     }
@@ -159,37 +193,52 @@ class Chats {
         const { newSendingMessageElem, newMessageId } =
             chats.#createMessageContainerElement(uniqueContainerClassName);
         newSendingMessageElem.innerHTML = `
-        <button class="three-dots-button three-dots-button-${newMessageId} ">
-            ${this.#getThreeDotsContainerContent()}
-        </button>
+        <div class="three-dots-button three-dots-button-${newMessageId}" data-id="${newMessageId}">
+            ${this.#getThreeDotsContainerContent(newMessageId)}
+        </div>
         <div class="message js-message ${uniqueMessageClassName}" data-id="${newMessageId}">
             
         </div>`;
-        const messsageBodyPreElem = _createElement("pre");
-        messsageBodyPreElem.textContent = typedMessage;
+        let newMessageData = undefined;
+        if (uniqueMessageClassName.includes("sent")) {
+            newMessageData = {
+                sent: typedMessage,
+                timeStramp: new Date().toISOString(),
+                isSent: true,
+                id: newMessageId,
+                containerClass: uniqueContainerClassName,
+                messageClassName: uniqueMessageClassName,
+            };
+            this.addMessage(newMessageData);
+        } else {
+            newMessageData = {
+                receive: typedMessage,
+                timeStramp: new Date().toISOString(),
+                isSent: false,
+                id: newMessageId,
+                containerClass: uniqueContainerClassName,
+                messageClassName: uniqueMessageClassName,
+            };
+            this.addMessage(newMessageData);
+        }
 
         newSendingMessageElem
             .querySelector(".message")
-            .appendChild(messsageBodyPreElem);
+            .appendChild(
+                this.#getMessageBody(typedMessage, { isNewMessage: true })
+            );
+        this.#setDate(newSendingMessageElem, newMessageData);
 
-        this.addMessage({
-            sent: typedMessage,
-            timeStramp: new Date().getDate(),
-            isSent: true,
-            id: newMessageId,
-            containerClass: uniqueContainerClassName,
-            messageClassName: uniqueMessageClassName,
-        });
         return newSendingMessageElem;
     }
 
     deleteMessage(id) {
-        this.allChats.map((message) => {
-            if (message.id !== id) {
-                return message;
-            }
+        console.log(this.allChats);
+        this.allChats = this.allChats.filter((message) => {
+            return message.id !== id;
         });
-        console.log(message);
+        console.log(this.allChats);
+        this.#saveToLocalStorage();
     }
 }
 
