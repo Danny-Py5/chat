@@ -29,11 +29,15 @@
 }
 body {
     /* padding: .3rem; */
-    font-size: 0.9rem;
     background-color: #f2f2f9;
     font-family: system-ui, -apple-system;
     /* position: relative; */
     height: 100vh;
+}
+p,
+li,
+a {
+    font-size: 1rem;
 }
 ul {
     list-style-type: none;

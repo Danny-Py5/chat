@@ -18,6 +18,9 @@ loadChats();
 activateActionsOnPreviousMessages();
 
 // hovered messages
+export const hoveredEventWeakMap = new WeakMap();
+export const hoveredEvenhandler = (messageCont, callBack) =>
+    callBack(messageCont);
 document.querySelectorAll(".message-container").forEach((messageCont) => {
     listenWhenHovered(messageCont);
 });
@@ -148,9 +151,8 @@ function sendMessage() {
     }
 }
 
-function listenWhenHovered(messageCont) {
-    messageCont.addEventListener("mousemove", () => {
-        // hide other three dots showing on other messages
+export function listenWhenHovered(messageCont) {
+    const moveHandler = () => {
         if (!currentThreeDotButtonElem) {
             removeShownThreeDotsButtons();
             const { messageContainerId } = messageCont.dataset;
@@ -161,7 +163,10 @@ function listenWhenHovered(messageCont) {
             hoveredMessageThreeDotsButton.classList.add("show");
             hideThreeDotsButtonOvertime(hoveredMessageThreeDotsButton);
         }
-    });
+    };
+
+    messageCont.addEventListener("mouseover", moveHandler);
+    hoveredEventWeakMap.set(messageCont, moveHandler);
 }
 
 let timeOut = undefined;
@@ -188,7 +193,7 @@ async function hideThreeDotsButtonOvertime(hoveredMessageThreeDotsButton) {
         }, 500);
     } catch (error) {}
 }
-function removeShownThreeDotsButtons() {
+export function removeShownThreeDotsButtons() {
     const allMessagesContainer =
         document.querySelectorAll(".message-container");
     [...allMessagesContainer].map((container) => {

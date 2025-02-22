@@ -1,7 +1,10 @@
 import { chats } from "../data/chats.js";
 import {
     currentThreeDotButtonElem,
+    removeShownThreeDotsButtons,
+    listenWhenHovered,
     restCurrentThreeDotButtonElem,
+    hoveredEventWeakMap,
 } from "./scripts.js";
 
 export function activateActionsOnPreviousMessages() {
@@ -40,25 +43,37 @@ function deleteHandler(button) {
     );
     thisButtonMessageContainer.remove();
 }
+
 function selectManyHandler(button) {
     const { id } = button.dataset;
 
-    const threeDotButton = document.querySelector(`.three-dots-button-${id}`);
-    threeDotButton.classList.remove("show");
-    threeDotButton.classList.remove("expanded");
+    clearFirstSelectedThreeDotsButtons(id);
 
     document.querySelectorAll(".message-container").forEach((messageCont) => {
         let { messageContainerId: newlySelectedMsgId } = messageCont.dataset;
         const selectedMessageElement = document.querySelector(
             `.message-container-${newlySelectedMsgId}`
         );
-        // removeEventListener("click", addSelectClass(selectedMessageElement));
-
         messageCont.addEventListener("click", () => {
             addSelectClass(selectedMessageElement);
         });
+        removeHoveredEvent(messageCont);
     });
-    // addSelectClass(document.querySelector(`.message-container-${id}`));
+}
+
+function clearFirstSelectedThreeDotsButtons(id) {
+    const threeDotButton = document.querySelector(`.three-dots-button-${id}`);
+    threeDotButton.classList.remove("show");
+    threeDotButton.classList.remove("expanded");
+}
+
+function removeHoveredEvent(messageCont) {
+    const handler = hoveredEventWeakMap.get(messageCont);
+    console.log(handler);
+    if (handler) {
+        messageCont.removeEventListener("mouseover", handler);
+        hoveredEventWeakMap.delete(messageCont);
+    }
 }
 
 function addSelectClass(message) {
