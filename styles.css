@@ -10,6 +10,7 @@
     --message-color: #eee;
     --selected-message-bg: rgba(0, 94, 0, 0.363);
     --three-dots-button-bg-color: #fff;
+    --hovered-message-bg-color: rgba(0, 94, 0, 0.058);
     --received-message-bg-color: rgb(0, 30, 0);
     --padding: 0.5rem;
     --chat-reveal-animation-sec: 0.1s;
@@ -23,6 +24,8 @@
     /* border */
     --border-radius-primary: 5px;
     --border-radius-secondary: 16px;
+
+    --general-box-shadow: 0 0 2px rgb(146, 146, 146);
 
     /* transistion */
     --transition-duration: 0.3s;
@@ -75,12 +78,12 @@ pre {
     bottom: 20px;
     right: 20px;
 }
-.chat-section i {
+/* .chat-section i {
     margin: 18% auto;
     padding: 1rem;
     border-radius: 100%;
     transform: scale(1.4);
-}
+} */
 
 .chat-section.open {
     overflow: unset;
@@ -132,8 +135,9 @@ pre {
     }
 }
 .chat-head {
-    /* border-bottom: 1px solid var(--color); */
-    height: fit-content;
+    border-top-right-radius: var(--border-radius-secondary);
+    border-top-left-radius: var(--border-radius-secondary);
+    height: 60px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -145,6 +149,27 @@ pre {
     /* background-color: red; */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.105);
 }
+.options {
+    width: 50%;
+    /* background-color: red; */
+    display: flex;
+    justify-content: space-between;
+}
+.options_button {
+    padding: 2px;
+    border: none;
+    background-color: #00000000;
+    /* box-shadow: var(--general-box-shadow); */
+}
+.options_button i {
+    width: 40px;
+}
+.options.hide {
+    display: none;
+}
+.options.show + .profile-cont {
+    display: none;
+}
 .profile-cont {
     display: flex;
     align-items: center;
@@ -153,8 +178,8 @@ pre {
     column-gap: 8px;
 }
 .user-img-cont {
-    width: 30px;
-    height: 30px;
+    width: 45px;
+    height: 45px;
     background-color: var(--color);
     border-radius: 50px;
     outline: 2px solid var(--primary-color);
@@ -186,7 +211,7 @@ pre {
 /* cancell-chat button  done*/
 .chat-cont {
     /* background-color: antiquewhite; */
-    margin: 70px 0;
+    margin: 62px 0;
     flex: 1;
     width: 100%;
     gap: 8px;
@@ -198,7 +223,7 @@ pre {
     /* background-color: red; */
     flex-direction: column;
     /* width: fit-content; */
-    row-gap: 4px;
+    row-gap: 1.5px;
 }
 
 /* style for both sent and recieved message  */
@@ -206,11 +231,18 @@ pre {
     /* border: 2px solid red; */
     max-width: 100%;
     position: relative;
+    transition: var(--transition-duration);
 }
 .message-container.selected {
     background-color: var(--selected-message-bg);
     border-radius: var(--border-radius-primary);
     padding: 2px;
+}
+.message-container:hover {
+    background-color: var(--hovered-message-bg-color);
+}
+.message-container.selected:hover {
+    background-color: var(--selected-message-bg);
 }
 .three-dots-button {
     box-shadow: 0 5px 10px rgba(144, 144, 144, 0.638);
