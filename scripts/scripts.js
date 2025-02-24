@@ -19,8 +19,7 @@ activateActionsOnPreviousMessages();
 
 // hovered messages
 export const hoveredEventWeakMap = new WeakMap();
-export const hoveredEvenhandler = (messageCont, callBack) =>
-    callBack(messageCont);
+
 document.querySelectorAll(".message-container").forEach((messageCont) => {
     listenWhenHovered(messageCont);
 });

@@ -32,7 +32,7 @@
 }
 body {
     /* padding: .3rem; */
-    background-color: #f2f2f9;
+    background-color: #ededfe;
     font-family: system-ui, -apple-system;
     /* position: relative; */
     height: 100vh;
@@ -238,9 +238,7 @@ pre {
     border-radius: var(--border-radius-primary);
     padding: 2px;
 }
-.message-container:hover {
-    background-color: var(--hovered-message-bg-color);
-}
+
 .message-container.selected:hover {
     background-color: var(--selected-message-bg);
 }
@@ -389,7 +387,11 @@ pre {
     font: inherit;
     align-self: flex-end;
 }
-
+@media (min-width: 500px) {
+    .message-container:hover {
+        background-color: var(--hovered-message-bg-color);
+    }
+}
 @media (max-width: 450px) {
     :root {
         --chat-width: 100%;

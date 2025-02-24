@@ -1,11 +1,5 @@
 import { chats } from "../data/chats.js";
-import {
-    currentThreeDotButtonElem,
-    removeShownThreeDotsButtons,
-    listenWhenHovered,
-    restCurrentThreeDotButtonElem,
-    hoveredEventWeakMap,
-} from "./scripts.js";
+import { hoveredEventWeakMap, listenWhenHovered } from "./scripts.js";
 
 const chatHeadOptionsElem = document.querySelector(".options");
 const chatHeadBackButon = document.querySelector(".back-options");
@@ -19,6 +13,7 @@ const back = () => {
             `.message-container-${id}`
         );
         selectedMessage.classList.remove("selected");
+        cancleSelection();
     });
 };
 chatHeadBackButon.addEventListener("click", back);
@@ -60,26 +55,55 @@ function deleteHandler(button) {
     thisButtonMessageContainer.remove();
 }
 
+const selectManyWeakMap = new WeakMap();
 function selectManyHandler(button) {
     const { id } = button.dataset;
     clearFirstSelectedThreeDotsButtons(id);
 
+    const allMessageContainers =
+        document.querySelectorAll(".message-container");
+
     document.querySelectorAll(".message-container").forEach((messageCont) => {
-        let { messageContainerId: newlySelectedMsgId } = messageCont.dataset;
-        const selectedMessageElement = document.querySelector(
-            `.message-container-${newlySelectedMsgId}`
-        );
-        messageCont.addEventListener("click", () => {
-            addSelected(selectedMessageElement);
-        });
         removeHoveredEvent(messageCont);
+
+        const handler = () => {
+            const selectedMessageElement = document.querySelector(
+                `.message-container-${newlySelectedMsgId}`
+            );
+            addSelected(selectedMessageElement);
+        };
+        const { messageContainerId: newlySelectedMsgId } = messageCont.dataset;
+
+        messageCont.addEventListener("click", handler);
+        selectManyWeakMap.set(messageCont, handler);
     });
     showChatHeadOptions();
 }
+function cancleSelection() {
+    if (selectedMessagesId.length <= 0) {
+        hideChatHeadOptions();
 
+        const allMessageContainers =
+            document.querySelectorAll(".message-container");
+        allMessageContainers.forEach((messageCont) => {
+            const handler = selectManyWeakMap.get(messageCont);
+            messageCont.removeEventListener("click", handler);
+            selectManyWeakMap.delete(handler);
+
+            // add back the hover event listener
+            allMessageContainers.forEach((messageCont) => {
+                listenWhenHovered(messageCont);
+            });
+        });
+    }
+}
 function showChatHeadOptions() {
     chatHeadOptionsElem.classList.remove("hide");
     chatHeadOptionsElem.classList.add("show");
+}
+function hideChatHeadOptions() {
+    chatHeadOptionsElem.classList.remove("show");
+    chatHeadOptionsElem.classList.add("hide");
 }
 
 function clearFirstSelectedThreeDotsButtons(id) {
@@ -100,13 +124,16 @@ function removeHoveredEvent(messageCont) {
 
 function addSelected(message) {
     const { messageContainerId: id } = message.dataset;
-    selectedMessagesId.push(id);
-
-    console.log(selectedMessagesId);
-    // console.log(message);
-    if (!message.classList.contains("selected")) {
+    if (
+        !selectedMessagesId.includes(id) &&
+        !message.classList.contains("selected")
+    ) {
+        selectedMessagesId.push(id);
         message.classList.add("selected");
     } else {
+        selectedMessagesId.splice(selectedMessagesId.indexOf(id), 1);
         message.classList.remove("selected");
     }
+    cancleSelection();
+    console.log(selectedMessagesId);
 }
